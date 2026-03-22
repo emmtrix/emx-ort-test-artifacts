@@ -2,5 +2,5 @@
 # Add packages here as the extraction logic is implemented.
 
 onnx
-onnxruntime
+onnxruntime==1.25.0
 numpy

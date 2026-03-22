@@ -30,6 +30,8 @@ extensible project structure.
 - **Do not execute ONNX Runtime tests** during this phase.
 - **Do not compile or run C++ test binaries** at any phase.
 - **Do not generate any artifact files** (`.onnx`, `.pb`) yet.
+- Do **not** move, retarget, update, or otherwise alter the ONNX Runtime
+  submodule.
 - Keep all Python files as **placeholders with docstrings** only.
 - Do **not** add `pyproject.toml` or packaging configuration – this is a
   non-packaged utility.
@@ -45,7 +47,8 @@ extensible project structure.
 - Keep modules small and focused on a single responsibility.
 - Prefer explicit over implicit; avoid premature abstraction.
 - No third-party dependencies beyond those listed in `requirements.txt`.
-- Do not modify any file under `onnxruntime-org/onnxruntime/` (submodule).
+- Do not modify any file under `onnxruntime-org/` (submodule).
+- Do not change the ONNX Runtime submodule path, URL, or pinned commit.
 
 ---
 
@@ -99,7 +102,7 @@ that test is written in Python or C++.
 ### Step 1 – Python Test Instrumentation
 
 - Identify test files under
-  `onnxruntime-org/onnxruntime/onnxruntime/test/python/` (including
+  `onnxruntime-org/onnxruntime/test/python/` (including
   `contrib_ops/`) that create `InferenceSession` objects.
 - Wrap or monkey-patch `onnxruntime.InferenceSession.__init__` and `.run()` to
   intercept model bytes and numpy input/output arrays.
@@ -107,8 +110,8 @@ that test is written in Python or C++.
 ### Step 2 – C++ Test-Data Discovery
 
 - Scan the ORT source tree for `.onnx` and `.pb` files under paths such as
-  `onnxruntime-org/onnxruntime/onnxruntime/test/testdata/` and
-  `onnxruntime-org/onnxruntime/onnxruntime/test/providers/`.
+  `onnxruntime-org/onnxruntime/test/testdata/` and
+  `onnxruntime-org/onnxruntime/test/providers/`.
 - Copy (or hard-link) discovered files into `artifacts/` under the mirrored
   path without compiling or executing any C++ code.
 
