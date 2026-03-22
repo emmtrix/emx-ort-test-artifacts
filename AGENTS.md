@@ -7,9 +7,10 @@ This file provides project-specific rules and guidance for AI coding agents
 
 ## Project Purpose
 
-`emx-ort-test-materializer` is a lightweight internal Python utility that will
-instrument ONNX Runtime Python tests and serialize the ONNX models and
-TensorProto inputs/outputs they exercise to disk as committed artifacts.
+`emx-ort-test-materializer` is a lightweight internal Python utility that
+materializes ONNX models and TensorProto inputs/outputs from the ONNX Runtime
+test suite — covering **both Python and C++ tests** — and commits the resulting
+artifacts to this repository.
 
 The artifacts are then consumed by downstream tooling (e.g. emmtrix compiler
 test-suites) without requiring a full ONNX Runtime build.
@@ -27,6 +28,7 @@ extensible project structure.
 ## Constraints
 
 - **Do not execute ONNX Runtime tests** during this phase.
+- **Do not compile or run C++ test binaries** at any phase.
 - **Do not generate any artifact files** (`.onnx`, `.pb`) yet.
 - Keep all Python files as **placeholders with docstrings** only.
 - Do **not** add `pyproject.toml` or packaging configuration – this is a
@@ -73,42 +75,63 @@ artifacts/
               test_data_set_0/
                 input_0.pb
                 output_0.pb
+      testdata/
+        <op_or_suite_name>/
+          model.onnx
+          test_data_set_0/
+            input_0.pb
+            output_0.pb
+      providers/
+        <provider_test_name>/
+          model.onnx
+          test_data_set_0/
+            input_0.pb
 ```
 
 The layout mirrors the path structure of the ONNX Runtime source tree so that
-each artifact can be traced back to its originating test.
+each artifact can be traced back to its originating test, regardless of whether
+that test is written in Python or C++.
 
 ---
 
 ## Guidance for Future Implementation Steps
 
-### Step 1 – Instrument Python Tests
+### Step 1 – Python Test Instrumentation
 
-- Identify which test files under
-  `onnxruntime-org/onnxruntime/onnxruntime/test/python/contrib_ops/` create
-  `InferenceSession` objects.
+- Identify test files under
+  `onnxruntime-org/onnxruntime/onnxruntime/test/python/` (including
+  `contrib_ops/`) that create `InferenceSession` objects.
 - Wrap or monkey-patch `onnxruntime.InferenceSession.__init__` and `.run()` to
-  intercept model bytes and numpy input arrays.
+  intercept model bytes and numpy input/output arrays.
 
-### Step 2 – Serialize Models
+### Step 2 – C++ Test-Data Discovery
 
-- Deserialize the intercepted bytes with `onnx.load_from_string()`.
+- Scan the ORT source tree for `.onnx` and `.pb` files under paths such as
+  `onnxruntime-org/onnxruntime/onnxruntime/test/testdata/` and
+  `onnxruntime-org/onnxruntime/onnxruntime/test/providers/`.
+- Copy (or hard-link) discovered files into `artifacts/` under the mirrored
+  path without compiling or executing any C++ code.
+
+### Step 3 – Serialize Python-Test Models
+
+- Deserialize intercepted bytes with `onnx.load_from_string()`.
 - Write the `ModelProto` back to disk as `model.onnx` under the appropriate
   artifact path.
 
-### Step 3 – Serialize Tensors
+### Step 4 – Serialize Python-Test Tensors
 
 - Convert each numpy input/output array to `onnx.TensorProto` using
   `onnx.numpy_helper.from_array()`.
 - Write each proto as a binary `.pb` file (`input_0.pb`, `output_0.pb`, …).
 
-### Step 4 – Path Mapping
+### Step 5 – Path Mapping
 
-- Derive the output directory from the test module name and the test-case name.
-- Follow the artifact layout documented above.
+- Derive the output directory from the test source path and the test-case name.
+- Follow the artifact layout documented above consistently for both Python and
+  C++ sources.
 
-### Step 5 – Validation
+### Step 6 – Validation
 
 - After extraction, load each `model.onnx` and `input_*.pb` with
   `onnxruntime.InferenceSession` and `onnx.numpy_helper.to_array()`.
-- Compare results against the serialized `output_*.pb` files.
+- Compare results against the serialized `output_*.pb` files where available.

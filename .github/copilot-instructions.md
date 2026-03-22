@@ -9,6 +9,10 @@ Refer to [AGENTS.md](../AGENTS.md) for all project-specific guidance.
   placeholder structure only.
 - **Prioritize clarity and incremental structure.**  Add one well-named,
   single-responsibility module or function at a time.
+- **Scope covers all ORT tests** – both Python-based and C++-based.  Do not
+  restrict designs or documentation to Python tests only.
+- **Do not compile or run C++ test binaries.**  C++ test-data files are
+  discovered and copied statically from the submodule.
 - **Do not add `pyproject.toml`** or any packaging configuration.  This is a
   non-packaged internal utility.
 - **Do not add CI workflows** or test runners.

@@ -1,8 +1,8 @@
 # artifacts/
 
 This directory stores the ONNX and TensorProto `.pb` artifacts that are
-materialized from the ONNX Runtime Python test suite by the extraction
-scripts in this repository.
+materialized from the ONNX Runtime test suite — covering **both Python and
+C++ tests** — by the extraction scripts in this repository.
 
 All files in this directory are **committed to version control** so that
 downstream consumers can reference them without requiring a full ONNX Runtime
@@ -27,20 +27,38 @@ artifacts/
                 input_0.pb     # first input tensor (TensorProto binary)
                 input_1.pb     # second input tensor (if present)
                 output_0.pb    # expected output tensor (if captured)
-              test_data_set_1/ # second set (if the test has multiple inputs)
-                input_0.pb
-                output_0.pb
+      testdata/
+        <op_or_suite_name>/    # mirrors onnxruntime/test/testdata/<name>/
+          model.onnx
+          test_data_set_0/
+            input_0.pb
+            output_0.pb
+      providers/
+        <provider_test_name>/  # mirrors onnxruntime/test/providers/<name>/
+          model.onnx
+          test_data_set_0/
+            input_0.pb
+            output_0.pb
 ```
+
+### Source-to-Artifact Mapping
+
+| ORT source path                                   | Artifact sub-path                              | Extraction method          |
+|---------------------------------------------------|------------------------------------------------|----------------------------|
+| `onnxruntime/test/python/contrib_ops/<file>.py`   | `test/python/contrib_ops/<file>/<test_case>/`  | Python instrumentation     |
+| `onnxruntime/test/python/<file>.py`               | `test/python/<file>/<test_case>/`              | Python instrumentation     |
+| `onnxruntime/test/testdata/<name>/`               | `test/testdata/<name>/`                        | Static copy from submodule |
+| `onnxruntime/test/providers/<name>/`              | `test/providers/<name>/`                       | Static copy from submodule |
 
 ### Naming Rules
 
-| Segment          | Derivation                                                       |
-|------------------|------------------------------------------------------------------|
-| `<test_file>`    | Python test module name, e.g. `test_conv`                       |
-| `<test_case>`    | Test method or parametrize ID, e.g. `test_conv_basic`           |
-| `input_<i>.pb`   | Inputs in the order they are passed to `InferenceSession.run()` |
-| `output_<i>.pb`  | Outputs in the order returned by `InferenceSession.run()`       |
-| `test_data_set_<n>/` | Indexed from `0`; one directory per distinct invocation    |
+| Segment              | Derivation                                                       |
+|----------------------|------------------------------------------------------------------|
+| `<test_file>`        | Python test module name, e.g. `test_conv`                       |
+| `<test_case>`        | Test method or parametrize ID, e.g. `test_conv_basic`           |
+| `input_<i>.pb`       | Inputs in the order passed to `InferenceSession.run()`          |
+| `output_<i>.pb`      | Outputs in the order returned by `InferenceSession.run()`       |
+| `test_data_set_<n>/` | Indexed from `0`; one directory per distinct invocation         |
 
 ---
 
