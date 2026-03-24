@@ -7,6 +7,8 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -70,6 +72,7 @@ class CaptureCollector {
 
   void Reset(std::string source_root_relative, std::string source_file_relative, std::filesystem::path artifact_root);
   void AddRecord(CapturedRecord record);
+  int AllocateRunIndex(std::string_view test_suite, std::string_view test_name);
   size_t RecordCount() const noexcept;
   void WriteJson(const std::filesystem::path& output_path) const;
   const std::filesystem::path& ArtifactRoot() const noexcept;
@@ -79,6 +82,7 @@ class CaptureCollector {
   std::string source_file_relative_;
   std::filesystem::path artifact_root_;
   std::vector<CapturedRecord> records_;
+  std::unordered_map<std::string, int> next_run_index_by_test_case_;
 };
 
 class CapturingOpTester : public onnxruntime::test::OpTester {
@@ -121,7 +125,7 @@ class CapturingOpTester : public onnxruntime::test::OpTester {
  private:
   void CaptureSnapshot(bool saw_run_call);
 
-  int capture_count_ = 0;
+  bool has_captured_snapshot_ = false;
 };
 
 }  // namespace emx::ort_runtime

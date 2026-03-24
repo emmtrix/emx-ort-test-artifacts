@@ -13,6 +13,7 @@
 #include <optional>
 #include <ostream>
 #include <set>
+#include <unordered_set>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -202,6 +203,25 @@ fs::path BuildArtifactDirectory(const CapturedRecord& record, const fs::path& ar
          (SanitizePathComponent(record.test_name) + "_run" + std::to_string(record.run_index));
 }
 
+bool ShouldSerializeInputArtifact(
+    const onnxruntime::test::BaseTester::Data& input,
+    size_t index,
+    const std::set<size_t>& initializer_indexes,
+    const std::unordered_set<std::string>& model_input_names) {
+  return initializer_indexes.count(index) == 0 &&
+         input.def.Exists() &&
+         input.data.IsAllocated() &&
+         model_input_names.count(input.def.Name()) > 0;
+}
+
+bool ShouldSerializeOutputArtifact(
+    const onnxruntime::test::BaseTester::Data& output,
+    const std::unordered_set<std::string>& model_output_names) {
+  return output.def.Exists() &&
+         output.data.IsAllocated() &&
+         model_output_names.count(output.def.Name()) > 0;
+}
+
 void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
   const fs::path& artifact_root = CaptureCollector::Instance().ArtifactRoot();
   if (artifact_root.empty()) {
@@ -209,8 +229,11 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
   }
 
   const fs::path artifact_dir = BuildArtifactDirectory(record, artifact_root);
+  fs::remove_all(artifact_dir);
   const fs::path dataset_dir = artifact_dir / "test_data_set_0";
   fs::create_directories(dataset_dir);
+  std::unordered_set<std::string> model_input_names;
+  std::unordered_set<std::string> model_output_names;
 
   try {
     onnxruntime::Model& model = tester.BuildModel();
@@ -220,6 +243,13 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
     }
 
     auto model_proto = model.ToProto();
+    for (const auto& input : model_proto.graph().input()) {
+      model_input_names.insert(input.name());
+    }
+    for (const auto& output : model_proto.graph().output()) {
+      model_output_names.insert(output.name());
+    }
+
     const fs::path model_path = artifact_dir / "model.onnx";
     WriteBinaryProtoToFile(model_proto, model_path);
     record.artifact_directory = fs::relative(artifact_dir, artifact_root).generic_string();
@@ -236,7 +266,7 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
   const auto& input_data = tester.CapturedInputData();
   for (size_t index = 0; index < input_data.size(); ++index) {
     const auto& input = input_data[index];
-    if (initializer_indexes.count(index) > 0 || !input.data.IsAllocated()) {
+    if (!ShouldSerializeInputArtifact(input, index, initializer_indexes, model_input_names)) {
       continue;
     }
 
@@ -259,7 +289,7 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
   size_t output_index = 0;
   const auto& output_data = tester.CapturedOutputData();
   for (const auto& output : output_data) {
-    if (!output.data.IsAllocated()) {
+    if (!ShouldSerializeOutputArtifact(output, model_output_names)) {
       continue;
     }
 
@@ -631,6 +661,7 @@ void CaptureCollector::Reset(std::string source_root_relative, std::string sourc
   source_file_relative_ = std::move(source_file_relative);
   artifact_root_ = std::move(artifact_root);
   records_.clear();
+  next_run_index_by_test_case_.clear();
 }
 
 void CaptureCollector::AddRecord(CapturedRecord record) {
@@ -639,6 +670,14 @@ void CaptureCollector::AddRecord(CapturedRecord record) {
   }
 
   records_.push_back(std::move(record));
+}
+
+int CaptureCollector::AllocateRunIndex(std::string_view test_suite, std::string_view test_name) {
+  const std::string key = std::string(test_suite) + "::" + std::string(test_name);
+  int& next_run_index = next_run_index_by_test_case_[key];
+  const int run_index = next_run_index;
+  ++next_run_index;
+  return run_index;
 }
 
 size_t CaptureCollector::RecordCount() const noexcept {
@@ -684,7 +723,7 @@ void CaptureCollector::WriteJson(const fs::path& output_path) const {
 
 CapturingOpTester::~CapturingOpTester() {
   try {
-    if (capture_count_ == 0) {
+    if (!has_captured_snapshot_) {
       CaptureSnapshot(false);
     }
   } catch (...) {
@@ -743,8 +782,16 @@ void CapturingOpTester::RunWithConfig(
 }
 
 void CapturingOpTester::CaptureSnapshot(bool saw_run_call) {
-  CaptureCollector::Instance().AddRecord(BuildRecordFromTester(*this, saw_run_call, capture_count_));
-  ++capture_count_;
+  std::string test_suite;
+  std::string test_name;
+  if (const auto* test_info = ::testing::UnitTest::GetInstance()->current_test_info(); test_info != nullptr) {
+    test_suite = test_info->test_suite_name();
+    test_name = test_info->name();
+  }
+
+  const int run_index = CaptureCollector::Instance().AllocateRunIndex(test_suite, test_name);
+  CaptureCollector::Instance().AddRecord(BuildRecordFromTester(*this, saw_run_call, run_index));
+  has_captured_snapshot_ = true;
 }
 
 }  // namespace emx::ort_runtime
