@@ -1,0 +1,12 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "Axis must be within range [-3, 2]. Axis is -4",
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

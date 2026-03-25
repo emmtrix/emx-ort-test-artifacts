@@ -1,0 +1,12 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "position_ids value 2048 at index 0 is out of range",
+  "outputs": [
+    {
+      "name": "output",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": 0.020399998873472214,
+      "absolute_error": 0.10199999809265137,
+      "sort_output": false
+    }
+  ]
+}

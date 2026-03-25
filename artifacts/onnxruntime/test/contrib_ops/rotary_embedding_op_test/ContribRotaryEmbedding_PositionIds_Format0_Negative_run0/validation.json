@@ -1,0 +1,12 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "position_ids base value -5 with sequence_length 1 exceeds cos/sin cache range",
+  "outputs": [
+    {
+      "name": "output",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

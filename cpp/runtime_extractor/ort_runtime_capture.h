@@ -23,6 +23,9 @@ struct CapturedTensor {
   std::vector<int64_t> shape;
   bool is_initializer = false;
   bool has_data = false;
+  std::optional<double> relative_error;
+  std::optional<double> absolute_error;
+  bool sort_output = false;
   std::string data_encoding;
   std::string data_base64;
   std::vector<std::string> string_data;
@@ -54,6 +57,8 @@ struct CapturedRecord {
   std::string op_name;
   int64_t opset = 0;
   std::string domain;
+  bool expects_failure = false;
+  std::string expected_failure_substring;
   bool saw_run_call = false;
   int node_count = 0;
   std::string artifact_directory;
@@ -123,7 +128,10 @@ class CapturingOpTester : public onnxruntime::test::OpTester {
   std::vector<size_t>& CapturedInitializerIndexes() { return GetInitializerIndexes(); }
 
  private:
-  void CaptureSnapshot(bool saw_run_call);
+  void CaptureSnapshot(
+      bool saw_run_call,
+      ExpectResult expect_result = ExpectResult::kExpectSuccess,
+      std::string expected_failure_string = {});
 
   bool has_captured_snapshot_ = false;
 };

@@ -1,0 +1,12 @@
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "outputs": [
+    {
+      "name": "output",
+      "relative_error": null,
+      "absolute_error": 0.05000000074505806,
+      "sort_output": false
+    }
+  ]
+}

@@ -13,6 +13,7 @@
 #include <optional>
 #include <ostream>
 #include <set>
+#include <map>
 #include <unordered_set>
 #include <sstream>
 #include <string>
@@ -29,6 +30,14 @@ namespace fs = std::filesystem;
 
 namespace emx::ort_runtime {
 namespace {
+
+bool IsQuantizeLstmReferenceHelper(const CapturingOpTester& tester) {
+  constexpr std::string_view kQuantizeLstmSource =
+      "onnxruntime/test/contrib_ops/quantize_lstm_op_test.cc";
+  return std::string_view(EMX_ORT_CAPTURE_SOURCE_FILE_REL) == kQuantizeLstmSource &&
+         tester.CapturedOpName() == "LSTM" &&
+         tester.CapturedDomain() == onnxruntime::kOnnxDomain;
+}
 
 std::string JsonEscape(std::string_view value) {
   std::string escaped;
@@ -197,6 +206,64 @@ void WriteBinaryProtoToFile(const google::protobuf::MessageLite& proto, const fs
   ORT_ENFORCE(proto.SerializeToOstream(&output), "Failed to serialize proto to file: ", output_path.string());
 }
 
+void WriteValidationMetadataToFile(const CapturedRecord& record, const fs::path& output_path) {
+  if (output_path.has_parent_path()) {
+    fs::create_directories(output_path.parent_path());
+  }
+
+  std::ofstream output(output_path);
+  ORT_ENFORCE(output.good(), "Failed to open validation metadata file: ", output_path.string());
+
+  output << "{\n";
+  WriteIndent(output, 2);
+  output << "\"expects_failure\": " << (record.expects_failure ? "true" : "false") << ",\n";
+  WriteIndent(output, 2);
+  output << "\"expected_failure_substring\": \"" << JsonEscape(record.expected_failure_substring) << "\",\n";
+  WriteIndent(output, 2);
+  output << "\"outputs\": [";
+  if (!record.outputs.empty()) {
+    output << "\n";
+  }
+
+  for (size_t index = 0; index < record.outputs.size(); ++index) {
+    const auto& tensor = record.outputs[index];
+    WriteIndent(output, 4);
+    output << "{\n";
+    WriteIndent(output, 6);
+    output << "\"name\": \"" << JsonEscape(tensor.name) << "\",\n";
+    WriteIndent(output, 6);
+    output << "\"relative_error\": ";
+    if (tensor.relative_error.has_value()) {
+      output << std::setprecision(17) << *tensor.relative_error;
+    } else {
+      output << "null";
+    }
+    output << ",\n";
+    WriteIndent(output, 6);
+    output << "\"absolute_error\": ";
+    if (tensor.absolute_error.has_value()) {
+      output << std::setprecision(17) << *tensor.absolute_error;
+    } else {
+      output << "null";
+    }
+    output << ",\n";
+    WriteIndent(output, 6);
+    output << "\"sort_output\": " << (tensor.sort_output ? "true" : "false") << "\n";
+    WriteIndent(output, 4);
+    output << "}";
+    if (index + 1 < record.outputs.size()) {
+      output << ",";
+    }
+    output << "\n";
+  }
+
+  if (!record.outputs.empty()) {
+    WriteIndent(output, 2);
+  }
+  output << "]\n";
+  output << "}\n";
+}
+
 fs::path BuildArtifactDirectory(const CapturedRecord& record, const fs::path& artifact_root) {
   const fs::path source_file(record.source_file);
   return artifact_root / source_file.parent_path() / source_file.stem() /
@@ -220,6 +287,18 @@ bool ShouldSerializeOutputArtifact(
   return output.def.Exists() &&
          output.data.IsAllocated() &&
          model_output_names.count(output.def.Name()) > 0;
+}
+
+std::map<std::string, onnxruntime::test::ValidateOutputParams> BuildOutputValidationParamsByName(
+    const std::vector<onnxruntime::test::BaseTester::Data>& output_data) {
+  std::map<std::string, onnxruntime::test::ValidateOutputParams> params_by_name;
+  for (const auto& output : output_data) {
+    if (!output.def.Exists()) {
+      continue;
+    }
+    params_by_name.emplace(output.def.Name(), output.validation_params);
+  }
+  return params_by_name;
 }
 
 void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
@@ -288,6 +367,7 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
 
   size_t output_index = 0;
   const auto& output_data = tester.CapturedOutputData();
+  const auto output_validation_params = BuildOutputValidationParamsByName(output_data);
   for (const auto& output : output_data) {
     if (!ShouldSerializeOutputArtifact(output, model_output_names)) {
       continue;
@@ -308,6 +388,7 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
       record.warnings.push_back("Failed to serialize output artifact for " + output.def.Name() + ": " + exception.what());
     }
   }
+
 }
 
 CapturedTensor CaptureOrtValue(
@@ -435,6 +516,24 @@ void WriteTensor(std::ostream& out, const CapturedTensor& tensor, int indent) {
   out << "\"is_initializer\": " << (tensor.is_initializer ? "true" : "false") << ",\n";
   WriteIndent(out, indent + 2);
   out << "\"has_data\": " << (tensor.has_data ? "true" : "false") << ",\n";
+  WriteIndent(out, indent + 2);
+  out << "\"relative_error\": ";
+  if (tensor.relative_error.has_value()) {
+    out << std::setprecision(17) << *tensor.relative_error;
+  } else {
+    out << "null";
+  }
+  out << ",\n";
+  WriteIndent(out, indent + 2);
+  out << "\"absolute_error\": ";
+  if (tensor.absolute_error.has_value()) {
+    out << std::setprecision(17) << *tensor.absolute_error;
+  } else {
+    out << "null";
+  }
+  out << ",\n";
+  WriteIndent(out, indent + 2);
+  out << "\"sort_output\": " << (tensor.sort_output ? "true" : "false") << ",\n";
   WriteIndent(out, indent + 2);
   out << "\"data_encoding\": \"" << JsonEscape(tensor.data_encoding) << "\",\n";
   WriteIndent(out, indent + 2);
@@ -574,6 +673,10 @@ void WriteRecord(std::ostream& out, const CapturedRecord& record, int indent) {
   WriteIndent(out, indent + 2);
   out << "\"domain\": \"" << JsonEscape(record.domain) << "\",\n";
   WriteIndent(out, indent + 2);
+  out << "\"expects_failure\": " << (record.expects_failure ? "true" : "false") << ",\n";
+  WriteIndent(out, indent + 2);
+  out << "\"expected_failure_substring\": \"" << JsonEscape(record.expected_failure_substring) << "\",\n";
+  WriteIndent(out, indent + 2);
   out << "\"saw_run_call\": " << (record.saw_run_call ? "true" : "false") << ",\n";
   WriteIndent(out, indent + 2);
   out << "\"node_count\": " << record.node_count << ",\n";
@@ -611,7 +714,12 @@ void WriteRecord(std::ostream& out, const CapturedRecord& record, int indent) {
   out << "}";
 }
 
-CapturedRecord BuildRecordFromTester(CapturingOpTester& tester, bool saw_run_call, int run_index) {
+CapturedRecord BuildRecordFromTester(
+    CapturingOpTester& tester,
+    bool saw_run_call,
+    int run_index,
+    onnxruntime::test::BaseTester::ExpectResult expect_result,
+    std::string_view expected_failure_string) {
   CapturedRecord record;
   record.source_file = EMX_ORT_CAPTURE_SOURCE_FILE_REL;
   record.run_index = run_index;
@@ -619,6 +727,8 @@ CapturedRecord BuildRecordFromTester(CapturingOpTester& tester, bool saw_run_cal
   record.op_name = tester.CapturedOpName();
   record.opset = tester.CapturedOpset();
   record.domain = tester.CapturedDomain();
+  record.expects_failure = expect_result == onnxruntime::test::BaseTester::ExpectResult::kExpectFailure;
+  record.expected_failure_substring = std::string(expected_failure_string);
 
   if (const auto* test_info = ::testing::UnitTest::GetInstance()->current_test_info(); test_info != nullptr) {
     record.test_suite = test_info->test_suite_name();
@@ -629,12 +739,6 @@ CapturedRecord BuildRecordFromTester(CapturingOpTester& tester, bool saw_run_cal
       tester.CapturedInitializerIndexes().begin(),
       tester.CapturedInitializerIndexes().end());
 
-  record.warnings.push_back(
-      "Runtime mode currently captures inputs and expected outputs directly from OpTester. "
-      "Attributes remain empty until a later merge step enriches them.");
-
-  WriteArtifacts(tester, record);
-
   const auto& input_data = tester.CapturedInputData();
   for (size_t index = 0; index < input_data.size(); ++index) {
     const bool is_initializer = initializer_indexes.count(index) > 0;
@@ -643,7 +747,30 @@ CapturedRecord BuildRecordFromTester(CapturingOpTester& tester, bool saw_run_cal
 
   const auto& output_data = tester.CapturedOutputData();
   for (const auto& output : output_data) {
-    record.outputs.push_back(CaptureOrtValue(output.def.Name(), output.data, false));
+    auto captured = CaptureOrtValue(output.def.Name(), output.data, false);
+    if (output.validation_params.relative_error.has_value()) {
+      captured.relative_error = *output.validation_params.relative_error;
+    }
+    if (output.validation_params.absolute_error.has_value()) {
+      captured.absolute_error = *output.validation_params.absolute_error;
+    }
+    captured.sort_output = output.validation_params.sort_output;
+    record.outputs.push_back(std::move(captured));
+  }
+
+  record.warnings.push_back(
+      "Runtime mode currently captures inputs and expected outputs directly from OpTester. "
+      "Attributes remain empty until a later merge step enriches them.");
+
+  WriteArtifacts(tester, record);
+
+  if (!record.artifact_directory.empty()) {
+    const fs::path validation_path = BuildArtifactDirectory(record, CaptureCollector::Instance().ArtifactRoot()) / "validation.json";
+    try {
+      WriteValidationMetadataToFile(record, validation_path);
+    } catch (const std::exception& exception) {
+      record.warnings.push_back("Failed to serialize validation metadata: " + std::string(exception.what()));
+    }
   }
 
   return record;
@@ -738,7 +865,7 @@ void CapturingOpTester::Run(
     std::vector<std::unique_ptr<onnxruntime::IExecutionProvider>>* execution_providers,
     ExecutionMode execution_mode,
     const onnxruntime::Graph::ResolveOptions& resolve_options) {
-  CaptureSnapshot(true);
+  CaptureSnapshot(true, expect_result, expected_failure_string);
   onnxruntime::test::OpTester::Run(
       expect_result,
       expected_failure_string,
@@ -759,7 +886,7 @@ void CapturingOpTester::Run(
     const onnxruntime::Graph::ResolveOptions& resolve_options,
     size_t* number_of_pre_packed_weights_counter,
     size_t* number_of_shared_pre_packed_weights_counter) {
-  CaptureSnapshot(true);
+  CaptureSnapshot(true, expect_result, expected_failure_string);
   onnxruntime::test::OpTester::Run(
       std::move(session_options),
       expect_result,
@@ -781,7 +908,15 @@ void CapturingOpTester::RunWithConfig(
       number_of_shared_pre_packed_weights_counter);
 }
 
-void CapturingOpTester::CaptureSnapshot(bool saw_run_call) {
+void CapturingOpTester::CaptureSnapshot(
+    bool saw_run_call,
+    ExpectResult expect_result,
+    std::string expected_failure_string) {
+  if (IsQuantizeLstmReferenceHelper(*this)) {
+    has_captured_snapshot_ = true;
+    return;
+  }
+
   std::string test_suite;
   std::string test_name;
   if (const auto* test_info = ::testing::UnitTest::GetInstance()->current_test_info(); test_info != nullptr) {
@@ -790,7 +925,8 @@ void CapturingOpTester::CaptureSnapshot(bool saw_run_call) {
   }
 
   const int run_index = CaptureCollector::Instance().AllocateRunIndex(test_suite, test_name);
-  CaptureCollector::Instance().AddRecord(BuildRecordFromTester(*this, saw_run_call, run_index));
+  CaptureCollector::Instance().AddRecord(
+      BuildRecordFromTester(*this, saw_run_call, run_index, expect_result, expected_failure_string));
   has_captured_snapshot_ = true;
 }
 

@@ -48,6 +48,11 @@ def detect_visual_studio_cmake() -> Path:
     )
 
 
+def ort_test_root() -> Path:
+    """Return the ONNX Runtime test root used as working directory for wrapped gtests."""
+    return repo_root() / "onnxruntime-org" / "onnxruntime" / "test"
+
+
 def relative_to_onnxruntime_org(path: Path) -> Path:
     """Return a path relative to the immutable onnxruntime-org checkout."""
     ort_root = repo_root() / "onnxruntime-org"
@@ -179,7 +184,12 @@ def run_runtime_extractor(
     if gtest_filter:
         command.append(f"--gtest_filter={gtest_filter}")
 
-    return subprocess.run(command, check=False, cwd=source_file.parent, capture_output=True)
+    return subprocess.run(
+        command,
+        check=False,
+        cwd=ort_test_root(),
+        capture_output=True,
+    )
 
 
 def write_runtime_merged_json(
