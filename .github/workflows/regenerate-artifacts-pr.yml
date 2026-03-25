@@ -23,6 +23,8 @@ jobs:
       CHECKOUT_REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
       CHECKOUT_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       PUSH_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
 
     steps:
       - name: Check out target branch
@@ -41,18 +43,32 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ninja-build
+          sudo apt-get install -y ninja-build ccache
+
+      - name: Cache ccache objects
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-${{ runner.os }}-${{ hashFiles('cpp/**') }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
+      - name: Reset ccache statistics
+        run: ccache -z
+
       - name: Regenerate artifacts
         run: |
           rm -rf artifacts/onnxruntime
           mkdir -p artifacts
           python scripts/extract_test_artifacts.py --artifacts-output artifacts --rebuild
+
+      - name: Show ccache statistics
+        run: ccache -s
 
       - name: Update validation expectations
         run: python scripts/update_artifact_validation_expectations.py
