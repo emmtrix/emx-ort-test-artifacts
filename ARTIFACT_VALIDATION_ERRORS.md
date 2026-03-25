@@ -7,11 +7,11 @@ Aggregates non-OK artifact validation outcomes.
 
 Expectation source: `tests/artifact_validation_expected.json`
 
-Validated cases: 3101 / 3229 OK, 128 non-OK.
+Validated cases: 3130 / 3257 OK, 127 non-OK.
 
 | Error message | Count | Sources |
 | --- | --- | --- |
-| Values differ | 113 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test, artifacts/onnxruntime/test/contrib_ops/gridsample_test |
+| Values differ | 112 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test |
 | Input count mismatch | 8 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test |
 | ONNX Runtime error | 7 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test, artifacts/onnxruntime/test/contrib_ops/moe_test |
 
@@ -20,7 +20,6 @@ Validated cases: 3101 / 3229 OK, 128 non-OK.
 | Error message | Source | Count |
 | --- | --- | --- |
 | Values differ | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test | 112 |
-| Values differ | artifacts/onnxruntime/test/contrib_ops/gridsample_test | 1 |
 | ONNX Runtime error | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | 5 |
 | Input count mismatch | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | 8 |
 | ONNX Runtime error | artifacts/onnxruntime/test/contrib_ops/moe_test | 2 |
@@ -143,7 +142,6 @@ Lists every artifact case with a non-OK expected validation result.
 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run7 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run8 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run9 | artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
-| artifacts/onnxruntime/test/contrib_ops/gridsample_test/gridsample_mode_bicubic_run0 | artifacts/onnxruntime/test/contrib_ops/gridsample_test | test_data_set_0 output_0 (Y): FAIL - values differ |
 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test/LayerNorm_BFloat16Input_run0 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | [ONNXRuntimeError] : 10 : INVALID_GRAPH : This is an invalid model. Type Error: Type 'tensor(bfloat16)' of input parameter (x) of operator (Shape) in node () is invalid. |
 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test/LayerNorm_Scale_Bias_Float16Input_run0 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | [ONNXRuntimeError] : 1 : FAIL : Node () Op (Flatten) [ShapeInferenceError] Invalid value(-1) for attribute 'axis' |
 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test/LayerNorm_Scale_Bias_Float16ScaleBiasOutput_run0 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | [ONNXRuntimeError] : 1 : FAIL : Node () Op (Flatten) [ShapeInferenceError] Invalid value(-1) for attribute 'axis' |

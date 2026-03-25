@@ -1,6 +1,12 @@
 {
   "expects_failure": true,
   "expected_failure_substring": "",
+  "excluded_providers": [
+    "CUDA",
+    "CUDANHWC",
+    "DML",
+    "OpenVINO"
+  ],
   "outputs": [
     {
       "name": "output",

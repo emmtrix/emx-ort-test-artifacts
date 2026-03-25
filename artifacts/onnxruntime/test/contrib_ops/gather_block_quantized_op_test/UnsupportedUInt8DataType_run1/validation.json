@@ -1,6 +1,9 @@
 {
   "expects_failure": true,
   "expected_failure_substring": "",
+  "included_providers": [
+    "CPU"
+  ],
   "outputs": [
     {
       "name": "output",

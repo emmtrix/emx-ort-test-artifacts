@@ -1,6 +1,12 @@
 {
   "expects_failure": false,
   "expected_failure_substring": "",
+  "included_providers": [
+    "CPU"
+  ],
+  "excluded_providers": [
+    "TensorRT"
+  ],
   "outputs": [
     {
       "name": "output",

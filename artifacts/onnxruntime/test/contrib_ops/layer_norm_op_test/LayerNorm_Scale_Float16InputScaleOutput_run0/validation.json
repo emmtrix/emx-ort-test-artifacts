@@ -1,6 +1,14 @@
 {
   "expects_failure": false,
   "expected_failure_substring": "",
+  "excluded_providers": [
+    "CoreML",
+    "Dnnl",
+    "NNAPI",
+    "OpenVINO",
+    "QNN",
+    "TensorRT"
+  ],
   "outputs": [
     {
       "name": "output",

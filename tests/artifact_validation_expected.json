@@ -1,5 +1,4 @@
 {
-  "description": "Expected validation results for checked-in ORT artifact test cases.",
   "test_cases": [
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/attention_lstm_op_test/BidirectionLstmWithBahdanauAM2BatchShortenSeqLen_run0",
@@ -2395,7 +2394,7 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gridsample_test/gridsample_mode_bicubic_run0",
-      "expected_result": "test_data_set_0 output_0 (Y): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gridsample_test/gridsample_mode_bilinear_run0",
@@ -6336,6 +6335,118 @@
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run1",
       "expected_result": "[ONNXRuntimeError] : 10 : INVALID_GRAPH : Load model from D:/emmtrix/git/emx-ort-test-materializer/artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run1/model.onnx failed:This is an invalid model. In Node, (\"node1\", QMoE, \"com.microsoft\", -1) : (\"input\": tensor(float16),\"router_probs\": tensor(float16),\"fc1_experts_weights\": tensor(uint8),\"fc1_scales\": tensor(float),\"\",\"fc2_experts_weights\": tensor(uint8),\"fc2_scales\": tensor(float),\"fc2_experts_bias\": tensor(float16),\"\",\"\",\"\",\"\",\"\",\"\",\"router_weights\": tensor(float16),) -> (\"output\": tensor(float16),) , Error Node(node1) with schema(com.microsoft::QMoE:1) has input size 15 not in range [min=7, max=14]."
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch1_HeadSize16_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch1_HeadSize16_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch1_HeadSize16_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch1_HeadSize16_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch1_HeadSize8_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch1_HeadSize8_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize16_8_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize16_8_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize16_8_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize16_8_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize40_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize40_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize40_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_Batch2_HeadSize40_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_DiffSequenceLengths_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_DiffSequenceLengths_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_DiffSequenceLengths_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_DiffSequenceLengths_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_DiffSequenceLengths_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_DiffSequenceLengths_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttentionWithPast_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttentionWithPast_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/SelfAttention_WithPastAndPresent_NoMask_NoRelPosBias_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/SelfAttention_WithPastAndPresent_NoMask_NoRelPosBias_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/SelfAttention_WithPastAndPresent_NoMask_NoRelPosBias_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/SelfAttention_WithPastAndPresent_NoMask_NoRelPosBias_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/SelfAttention_WithPastAndPresent_NoMask_NoRelPosBias_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/SelfAttention_WithPastAndPresent_NoMask_NoRelPosBias_run5",
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/murmur_hash3_test/DefaultSeed_run0",

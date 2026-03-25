@@ -59,6 +59,8 @@ struct CapturedRecord {
   std::string domain;
   bool expects_failure = false;
   std::string expected_failure_substring;
+  std::vector<std::string> included_providers;
+  std::vector<std::string> excluded_providers;
   bool saw_run_call = false;
   int node_count = 0;
   std::string artifact_directory;
@@ -126,12 +128,16 @@ class CapturingOpTester : public onnxruntime::test::OpTester {
   std::vector<onnxruntime::test::BaseTester::Data>& CapturedInputData() { return GetInputData(); }
   std::vector<onnxruntime::test::BaseTester::Data>& CapturedOutputData() { return GetOutputData(); }
   std::vector<size_t>& CapturedInitializerIndexes() { return GetInitializerIndexes(); }
+  std::vector<std::string> CapturedConfiguredExecutionProviders() const;
+  std::vector<std::string> CapturedExcludedProviderTypes() const;
 
  private:
   void CaptureSnapshot(
       bool saw_run_call,
       ExpectResult expect_result = ExpectResult::kExpectSuccess,
-      std::string expected_failure_string = {});
+      std::string expected_failure_string = {},
+      const std::unordered_set<std::string>* excluded_provider_types = nullptr,
+      const std::vector<std::unique_ptr<onnxruntime::IExecutionProvider>>* execution_providers = nullptr);
 
   bool has_captured_snapshot_ = false;
 };

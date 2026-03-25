@@ -170,6 +170,38 @@ writes to `build/ort_runtime_contrib_ops.json`, artifacts are written under
 `artifacts/`, and temporary build products stay under the ignored `build/`
 directory.
 
+Each artifact directory may also contain a `validation.json` file with replay
+metadata captured from the original ORT test. The file currently uses this
+shape:
+
+```json
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "included_providers": ["CPU"],
+  "excluded_providers": ["CUDA"],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}
+```
+
+Notes:
+
+- `included_providers` is present only when the original test explicitly ran on
+  a specific provider list.
+- `excluded_providers` is present only when the original test explicitly
+  excluded providers.
+- Provider names are normalized to short ORT-independent labels such as `CPU`,
+  `CUDA`, `DML`, `TensorRT`, `ROCM`, `WebGPU`, and `XNNPACK`.
+- If neither field is present, the original test used ORT's implicit default
+  provider selection.
+
 ---
 
 ## License

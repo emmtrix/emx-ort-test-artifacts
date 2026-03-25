@@ -1,4 +1,6 @@
 {
+  "expects_failure": false,
+  "expected_failure_substring": "",
   "outputs": [
     {
       "name": "output",

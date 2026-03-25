@@ -1,6 +1,9 @@
 {
   "expects_failure": false,
   "expected_failure_substring": "",
+  "excluded_providers": [
+    "OpenVINO"
+  ],
   "outputs": [
     {
       "name": "output",

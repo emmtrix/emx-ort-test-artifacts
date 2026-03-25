@@ -1,0 +1,27 @@
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "excluded_providers": [
+    "TensorRT"
+  ],
+  "outputs": [
+    {
+      "name": "uniques",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    },
+    {
+      "name": "idx",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    },
+    {
+      "name": "counts",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

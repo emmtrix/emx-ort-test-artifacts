@@ -1,6 +1,9 @@
 {
   "expects_failure": true,
   "expected_failure_substring": "position_ids value 2048 at index 0 is out of range",
+  "included_providers": [
+    "CPU"
+  ],
   "outputs": [
     {
       "name": "output",

@@ -1,0 +1,15 @@
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "excluded_providers": [
+    "TensorRT"
+  ],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

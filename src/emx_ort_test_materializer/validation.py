@@ -47,6 +47,8 @@ class TestCaseValidation:
     outputs: dict[str, OutputValidation]
     expects_failure: bool = False
     expected_failure_substring: str = ""
+    included_providers: tuple[str, ...] = ()
+    excluded_providers: tuple[str, ...] = ()
 
 
 def default_tolerances(dtype: np.dtype) -> tuple[float, float]:
@@ -93,6 +95,12 @@ def load_validation_metadata(test_case_dir: Path) -> TestCaseValidation:
         outputs=metadata,
         expects_failure=bool(payload.get("expects_failure", False)),
         expected_failure_substring=str(payload.get("expected_failure_substring", "")),
+        included_providers=tuple(
+            str(provider) for provider in payload.get("included_providers", [])
+        ),
+        excluded_providers=tuple(
+            str(provider) for provider in payload.get("excluded_providers", [])
+        ),
     )
 
 

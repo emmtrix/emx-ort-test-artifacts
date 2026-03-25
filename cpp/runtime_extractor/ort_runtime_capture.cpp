@@ -82,6 +82,45 @@ std::string JsonEscape(std::string_view value) {
   return escaped;
 }
 
+std::string NormalizeProviderName(std::string_view provider_type) {
+  static const std::map<std::string, std::string, std::less<>> kProviderAliases = {
+      {"CPUExecutionProvider", "CPU"},
+      {"CUDAExecutionProvider", "CUDA"},
+      {"DmlExecutionProvider", "DML"},
+      {"TensorrtExecutionProvider", "TensorRT"},
+      {"ROCMExecutionProvider", "ROCM"},
+      {"OpenVINOExecutionProvider", "OpenVINO"},
+      {"CoreMLExecutionProvider", "CoreML"},
+      {"XnnpackExecutionProvider", "XNNPACK"},
+      {"QNNExecutionProvider", "QNN"},
+      {"WebGpuExecutionProvider", "WebGPU"},
+      {"MIGraphXExecutionProvider", "MIGraphX"},
+      {"NnapiExecutionProvider", "NNAPI"},
+      {"RknpuExecutionProvider", "RKNPU"},
+      {"VitisAIExecutionProvider", "VitisAI"},
+      {"JsExecutionProvider", "JS"},
+      {"AzureExecutionProvider", "Azure"},
+      {"CannExecutionProvider", "CANN"},
+      {"ArmNNExecutionProvider", "ArmNN"},
+      {"AclExecutionProvider", "ACL"},
+      {"SystolicExecutionProvider", "Systolic"},
+      {"SNPEExecutionProvider", "SNPE"},
+      {"MsnpuExecutionProvider", "MSNPU"},
+  };
+
+  if (const auto it = kProviderAliases.find(provider_type); it != kProviderAliases.end()) {
+    return it->second;
+  }
+
+  constexpr std::string_view suffix = "ExecutionProvider";
+  if (provider_type.size() > suffix.size() &&
+      provider_type.substr(provider_type.size() - suffix.size()) == suffix) {
+    return std::string(provider_type.substr(0, provider_type.size() - suffix.size()));
+  }
+
+  return std::string(provider_type);
+}
+
 void WriteIndent(std::ostream& out, int indent) {
   for (int i = 0; i < indent; ++i) {
     out.put(' ');
@@ -219,6 +258,18 @@ void WriteValidationMetadataToFile(const CapturedRecord& record, const fs::path&
   output << "\"expects_failure\": " << (record.expects_failure ? "true" : "false") << ",\n";
   WriteIndent(output, 2);
   output << "\"expected_failure_substring\": \"" << JsonEscape(record.expected_failure_substring) << "\",\n";
+  if (!record.included_providers.empty()) {
+    WriteIndent(output, 2);
+    output << "\"included_providers\": ";
+    WriteStringArray(output, record.included_providers, 2);
+    output << ",\n";
+  }
+  if (!record.excluded_providers.empty()) {
+    WriteIndent(output, 2);
+    output << "\"excluded_providers\": ";
+    WriteStringArray(output, record.excluded_providers, 2);
+    output << ",\n";
+  }
   WriteIndent(output, 2);
   output << "\"outputs\": [";
   if (!record.outputs.empty()) {
@@ -676,6 +727,18 @@ void WriteRecord(std::ostream& out, const CapturedRecord& record, int indent) {
   out << "\"expects_failure\": " << (record.expects_failure ? "true" : "false") << ",\n";
   WriteIndent(out, indent + 2);
   out << "\"expected_failure_substring\": \"" << JsonEscape(record.expected_failure_substring) << "\",\n";
+  if (!record.included_providers.empty()) {
+    WriteIndent(out, indent + 2);
+    out << "\"included_providers\": ";
+    WriteStringArray(out, record.included_providers, indent + 2);
+    out << ",\n";
+  }
+  if (!record.excluded_providers.empty()) {
+    WriteIndent(out, indent + 2);
+    out << "\"excluded_providers\": ";
+    WriteStringArray(out, record.excluded_providers, indent + 2);
+    out << ",\n";
+  }
   WriteIndent(out, indent + 2);
   out << "\"saw_run_call\": " << (record.saw_run_call ? "true" : "false") << ",\n";
   WriteIndent(out, indent + 2);
@@ -719,7 +782,9 @@ CapturedRecord BuildRecordFromTester(
     bool saw_run_call,
     int run_index,
     onnxruntime::test::BaseTester::ExpectResult expect_result,
-    std::string_view expected_failure_string) {
+    std::string_view expected_failure_string,
+    const std::unordered_set<std::string>* excluded_provider_types,
+    const std::vector<std::unique_ptr<onnxruntime::IExecutionProvider>>* execution_providers) {
   CapturedRecord record;
   record.source_file = EMX_ORT_CAPTURE_SOURCE_FILE_REL;
   record.run_index = run_index;
@@ -729,6 +794,24 @@ CapturedRecord BuildRecordFromTester(
   record.domain = tester.CapturedDomain();
   record.expects_failure = expect_result == onnxruntime::test::BaseTester::ExpectResult::kExpectFailure;
   record.expected_failure_substring = std::string(expected_failure_string);
+  if (execution_providers != nullptr) {
+    for (const auto& execution_provider : *execution_providers) {
+      if (execution_provider) {
+        record.included_providers.push_back(NormalizeProviderName(execution_provider->Type()));
+      }
+    }
+  } else {
+    record.included_providers = tester.CapturedConfiguredExecutionProviders();
+  }
+  if (excluded_provider_types != nullptr) {
+    record.excluded_providers.reserve(excluded_provider_types->size());
+    for (const auto& provider_type : *excluded_provider_types) {
+      record.excluded_providers.push_back(NormalizeProviderName(provider_type));
+    }
+    std::sort(record.excluded_providers.begin(), record.excluded_providers.end());
+  } else {
+    record.excluded_providers = tester.CapturedExcludedProviderTypes();
+  }
 
   if (const auto* test_info = ::testing::UnitTest::GetInstance()->current_test_info(); test_info != nullptr) {
     record.test_suite = test_info->test_suite_name();
@@ -851,10 +934,37 @@ void CaptureCollector::WriteJson(const fs::path& output_path) const {
 CapturingOpTester::~CapturingOpTester() {
   try {
     if (!has_captured_snapshot_) {
-      CaptureSnapshot(false);
+      const auto& run_context = GetRunContext();
+      CaptureSnapshot(
+          false,
+          run_context.expect_result,
+          run_context.expected_failure_string,
+          &run_context.excluded_provider_types);
     }
   } catch (...) {
   }
+}
+
+std::vector<std::string> CapturingOpTester::CapturedConfiguredExecutionProviders() const {
+  std::vector<std::string> execution_provider_types;
+  const auto& execution_providers = GetRunContext().execution_providers;
+  execution_provider_types.reserve(execution_providers.size());
+  for (const auto& execution_provider : execution_providers) {
+    if (execution_provider) {
+      execution_provider_types.push_back(NormalizeProviderName(execution_provider->Type()));
+    }
+  }
+  return execution_provider_types;
+}
+
+std::vector<std::string> CapturingOpTester::CapturedExcludedProviderTypes() const {
+  std::vector<std::string> excluded_provider_types;
+  excluded_provider_types.reserve(GetRunContext().excluded_provider_types.size());
+  for (const auto& provider_type : GetRunContext().excluded_provider_types) {
+    excluded_provider_types.push_back(NormalizeProviderName(provider_type));
+  }
+  std::sort(excluded_provider_types.begin(), excluded_provider_types.end());
+  return excluded_provider_types;
 }
 
 void CapturingOpTester::Run(
@@ -865,7 +975,12 @@ void CapturingOpTester::Run(
     std::vector<std::unique_ptr<onnxruntime::IExecutionProvider>>* execution_providers,
     ExecutionMode execution_mode,
     const onnxruntime::Graph::ResolveOptions& resolve_options) {
-  CaptureSnapshot(true, expect_result, expected_failure_string);
+  CaptureSnapshot(
+      true,
+      expect_result,
+      expected_failure_string,
+      &excluded_provider_types,
+      execution_providers);
   onnxruntime::test::OpTester::Run(
       expect_result,
       expected_failure_string,
@@ -886,7 +1001,12 @@ void CapturingOpTester::Run(
     const onnxruntime::Graph::ResolveOptions& resolve_options,
     size_t* number_of_pre_packed_weights_counter,
     size_t* number_of_shared_pre_packed_weights_counter) {
-  CaptureSnapshot(true, expect_result, expected_failure_string);
+  CaptureSnapshot(
+      true,
+      expect_result,
+      expected_failure_string,
+      &excluded_provider_types,
+      execution_providers);
   onnxruntime::test::OpTester::Run(
       std::move(session_options),
       expect_result,
@@ -902,7 +1022,12 @@ void CapturingOpTester::Run(
 void CapturingOpTester::RunWithConfig(
     size_t* number_of_pre_packed_weights_counter,
     size_t* number_of_shared_pre_packed_weights_counter) {
-  CaptureSnapshot(true);
+  const auto& run_context = GetRunContext();
+  CaptureSnapshot(
+      true,
+      run_context.expect_result,
+      run_context.expected_failure_string,
+      &run_context.excluded_provider_types);
   onnxruntime::test::OpTester::RunWithConfig(
       number_of_pre_packed_weights_counter,
       number_of_shared_pre_packed_weights_counter);
@@ -911,7 +1036,9 @@ void CapturingOpTester::RunWithConfig(
 void CapturingOpTester::CaptureSnapshot(
     bool saw_run_call,
     ExpectResult expect_result,
-    std::string expected_failure_string) {
+    std::string expected_failure_string,
+    const std::unordered_set<std::string>* excluded_provider_types,
+    const std::vector<std::unique_ptr<onnxruntime::IExecutionProvider>>* execution_providers) {
   if (IsQuantizeLstmReferenceHelper(*this)) {
     has_captured_snapshot_ = true;
     return;
@@ -926,7 +1053,14 @@ void CapturingOpTester::CaptureSnapshot(
 
   const int run_index = CaptureCollector::Instance().AllocateRunIndex(test_suite, test_name);
   CaptureCollector::Instance().AddRecord(
-      BuildRecordFromTester(*this, saw_run_call, run_index, expect_result, expected_failure_string));
+      BuildRecordFromTester(
+          *this,
+          saw_run_call,
+          run_index,
+          expect_result,
+          expected_failure_string,
+          excluded_provider_types,
+          execution_providers));
   has_captured_snapshot_ = true;
 }
 
