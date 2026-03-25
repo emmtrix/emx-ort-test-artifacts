@@ -1,2 +1,2 @@
 *.onnx filter=lfs diff=lfs merge=lfs -text
-*.pb filter=lfs diff=lfs merge=lfs -text
+*.pb filter=lfs diff=lfs merge=lfs -text linguist-detectable=false linguist-generated=true
