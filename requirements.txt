@@ -2,6 +2,6 @@
 # Add packages here as the extraction logic is implemented.
 
 onnx
-onnxruntime==1.25.0
+onnxruntime==1.24.4
 numpy
 pytest
