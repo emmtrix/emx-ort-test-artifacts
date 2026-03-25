@@ -13,6 +13,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -90,6 +91,19 @@ def sanitize_filename(path: Path) -> str:
     return "".join(character if character.isalnum() else "_" for character in path.as_posix())
 
 
+def format_command(command: list[str]) -> str:
+    """Return one shell-style string representation for logging."""
+    if os.name == "nt":
+        return subprocess.list2cmdline(command)
+    return shlex.join(command)
+
+
+def run_logged_command(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[bytes]:
+    """Print one external command before executing it."""
+    print(f"> {format_command(command)}", flush=True)
+    return subprocess.run(command, **kwargs)
+
+
 def configure_runtime_extractor(cmake_binary: Path, build_dir: Path) -> None:
     """Configure the runtime extractor build once for the current workspace."""
     command = [
@@ -112,7 +126,7 @@ def configure_runtime_extractor(cmake_binary: Path, build_dir: Path) -> None:
         if shutil.which("ninja"):
             command.extend(["-G", "Ninja"])
         command.append("-DCMAKE_BUILD_TYPE=RelWithDebInfo")
-    subprocess.run(command, check=True)
+    run_logged_command(command, check=True)
 
 
 def write_runtime_capture_config(
@@ -166,7 +180,7 @@ def build_runtime_extractor(cmake_binary: Path, build_dir: Path) -> Path:
     command = [str(cmake_binary), "--build", str(build_dir), "--target", "ort_cpp_test_runtime_extractor"]
     if os.name == "nt":
         command.extend(["--config", "RelWithDebInfo"])
-    subprocess.run(command, check=True)
+    run_logged_command(command, check=True)
 
     candidates = []
     if os.name == "nt":
@@ -208,7 +222,7 @@ def run_runtime_extractor(
     if gtest_filter:
         command.append(f"--gtest_filter={gtest_filter}")
 
-    return subprocess.run(
+    return run_logged_command(
         command,
         check=False,
         cwd=ort_test_root(),
