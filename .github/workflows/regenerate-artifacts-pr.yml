@@ -23,8 +23,10 @@ jobs:
       CHECKOUT_REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
       CHECKOUT_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       PUSH_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+      # Route compiler invocations through ccache during CMake builds.
       CMAKE_C_COMPILER_LAUNCHER: ccache
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
+      # Persist the compiler cache inside the workspace so actions/cache can store it.
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_MAXSIZE: 2G
 
@@ -47,22 +49,26 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ninja-build ccache
 
-      - name: Cache ccache objects
-        uses: actions/cache@v4
+      # Restore the shared compiler cache before configuring or building the extractor.
+      - name: Restore ccache objects
+        id: ccache-restore
+        uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
           key: ccache-${{ runner.os }}-${{ hashFiles('cpp/**') }}
           restore-keys: |
             ccache-${{ runner.os }}-
-          save-always: true
+
+      # Print cache contents from the restored archive before zeroing per-run counters.
+      - name: Reset ccache statistics
+        run: |
+          ccache -s
+          ccache -z
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-
-      - name: Reset ccache statistics
-        run: ccache -z
 
       - name: Regenerate artifacts
         run: |
@@ -70,9 +76,18 @@ jobs:
           mkdir -p artifacts
           python scripts/extract_test_artifacts.py --artifacts-output artifacts --rebuild
 
+      # Show hit/miss counters after the regeneration build finished.
       - name: Show ccache statistics
         if: always()
         run: ccache -s
+
+      # Save the warmed cache even when later steps fail.
+      - name: Save ccache objects
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/.ccache
+          key: ${{ steps.ccache-restore.outputs.cache-primary-key }}
 
       - name: Update validation expectations
         run: python scripts/update_artifact_validation_expectations.py
