@@ -1,6 +1,9 @@
 name: Regenerate Artifacts
 
 on:
+  push:
+    branches:
+      - main	# Main is only used to fill the ccache
   pull_request:
     types:
       - opened
@@ -26,13 +29,13 @@ jobs:
       CHECKOUT_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       PUSH_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       CACHE_DELETE_REF: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/merge', github.event.pull_request.number) || format('refs/heads/{0}', github.ref_name) }}
+      WARM_CCACHE_ONLY: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
       # Route compiler invocations through ccache during CMake builds.
       CMAKE_C_COMPILER_LAUNCHER: ccache
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
       # Persist the compiler cache inside the workspace so actions/cache can store it.
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_MAXSIZE: 2G
-      CCACHE_KEY: ccache-Linux-regenerate-artifacts
 
     steps:
       - name: Check out target branch
@@ -58,10 +61,9 @@ jobs:
         id: ccache-restore
         uses: actions/cache/restore@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.CCACHE_KEY }}
+          path: ${{ env.CCACHE_DIR }}
           restore-keys: |
-            ccache-Linux-
+            ccache-			# Restore any cache with `ccache-` prefix
 
       # Print cache contents from the restored archive before zeroing per-run counters.
       - name: Reset ccache statistics
@@ -97,20 +99,23 @@ jobs:
         if: always()
         uses: actions/cache/save@v4
         with:
-          path: ${{ github.workspace }}/.ccache
-          key: ${{ env.CCACHE_KEY }}
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-${{ github.run_id }}
 
       - name: Update validation expectations
+        if: env.WARM_CCACHE_ONLY != 'true'
         run: python scripts/update_artifact_validation_expectations.py
 
       - name: Update validation overview
+        if: env.WARM_CCACHE_ONLY != 'true'
         run: python scripts/generate_artifact_validation_overview.py
 
       - name: Run pytest
+        if: env.WARM_CCACHE_ONLY != 'true'
         run: pytest -q
 
       - name: Commit and push generated changes
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        if: env.WARM_CCACHE_ONLY != 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -123,5 +128,5 @@ jobs:
           git push origin HEAD:${PUSH_REF}
 
       - name: Skip auto-push for fork pull requests
-        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        if: env.WARM_CCACHE_ONLY != 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
         run: echo "Skipping commit and push because this pull request comes from a fork."
