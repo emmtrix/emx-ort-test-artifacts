@@ -64,16 +64,17 @@ endif()
 target_link_libraries(
   ort_cpp_test_runtime_extractor
   PRIVATE
-    onnxruntime_common
-    onnxruntime_framework
-    onnxruntime_graph
-    onnxruntime_lora
-    onnxruntime_mlas
+    onnxruntime_unittest_utils
+    onnxruntime_session
     onnxruntime_optimizer
     onnxruntime_providers
-    onnxruntime_session
-    onnxruntime_unittest_utils
     onnxruntime_util
+    onnxruntime_lora
+    onnxruntime_framework
+    onnxruntime_graph
+    onnxruntime_mlas
+    onnxruntime_common
+    onnxruntime_flatbuffers
     GTest::gtest
     GTest::gmock
 )
