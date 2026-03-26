@@ -2,9 +2,9 @@
 """
 Build and run the runtime C++ extractor for ONNX Runtime OpTester-based tests.
 
-This script compiles a small out-of-tree wrapper around selected ORT unit test
-sources, executes those tests, writes per-run ONNX/TensorProto artifacts, and
-optionally merges the per-file runtime JSON outputs into a single report.
+This script compiles out-of-tree wrapper executables around selected ORT unit
+test sources, executes those tests, writes per-run ONNX/TensorProto artifacts,
+and optionally merges the per-file runtime JSON outputs into a single report.
 """
 
 from __future__ import annotations
@@ -17,10 +17,26 @@ import shlex
 import shutil
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
 DEFAULT_ORT_TEST_RANDOM_SEED = "1337"
+DEFAULT_MAX_PARALLEL_JOBS = 8
+MINIMUM_CMAKE_VERSION = (3, 28, 0)
+
+
+@dataclass(frozen=True)
+class RuntimeTargetSpec:
+    """Describe one generated extractor target for a single ORT C++ source file."""
+
+    index: int
+    target_name: str
+    source_file: Path
+    source_file_relative: Path
+    extra_includes_header: Path
+    output_path: Path
 
 
 def repo_root() -> Path:
@@ -30,28 +46,32 @@ def repo_root() -> Path:
 
 def detect_cmake_binary() -> Path:
     """Locate a usable CMake binary for the current host platform."""
-    cmake_on_path = shutil.which("cmake")
-    if cmake_on_path:
-        return Path(cmake_on_path)
-
     candidates = [
-        Path(
-            r"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
-        ),
-        Path(
-            r"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
-        ),
-        Path(
-            r"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
-        ),
+        Path(path)
+        for path in [
+            shutil.which("cmake"),
+            r"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+            r"C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+            r"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        ]
+        if path
     ]
 
+    rejected_candidates: list[str] = []
     for candidate in candidates:
-        if candidate.exists():
+        if candidate.exists() and cmake_version_satisfies_minimum(candidate):
             return candidate
+        if candidate.exists():
+            rejected_candidates.append(candidate.as_posix())
 
     raise FileNotFoundError(
-        "Unable to locate a CMake binary required for the runtime extractor."
+        "Unable to locate a CMake binary required for the runtime extractor "
+        f"with version {format_version_tuple(MINIMUM_CMAKE_VERSION)} or newer."
+        + (
+            f" Rejected: {', '.join(rejected_candidates)}."
+            if rejected_candidates
+            else ""
+        )
     )
 
 
@@ -93,6 +113,52 @@ def sanitize_filename(path: Path) -> str:
     return "".join(character if character.isalnum() else "_" for character in path.as_posix())
 
 
+def parse_version_tuple(version_text: str) -> tuple[int, int, int] | None:
+    """Parse one dotted semantic version string into a numeric tuple."""
+    match = re.search(r"(\d+)\.(\d+)\.(\d+)", version_text)
+    if match is None:
+        return None
+    return tuple(int(component) for component in match.groups())
+
+
+def format_version_tuple(version: tuple[int, int, int]) -> str:
+    """Format one numeric version tuple as a dotted string."""
+    return ".".join(str(component) for component in version)
+
+
+def cmake_version_satisfies_minimum(cmake_binary: Path) -> bool:
+    """Return whether the provided CMake binary satisfies the project minimum version."""
+    try:
+        result = subprocess.run(
+            [str(cmake_binary), "--version"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return False
+
+    version = parse_version_tuple(result.stdout)
+    return version is not None and version >= MINIMUM_CMAKE_VERSION
+
+
+def default_parallel_jobs() -> int:
+    """Return a conservative default for parallel build and execution jobs."""
+    available = os.cpu_count() or 1
+    return max(1, min(DEFAULT_MAX_PARALLEL_JOBS, available))
+
+
+def runtime_target_name(index: int) -> str:
+    """Return one deterministic CMake target name for a source-file wrapper."""
+    return f"ort_cpp_test_runtime_extractor_{index:04d}"
+
+
+def cmake_quote(value: str) -> str:
+    """Return one CMake string literal."""
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
 def format_command(command: list[str]) -> str:
     """Return one shell-style string representation for logging."""
     if os.name == "nt":
@@ -131,81 +197,163 @@ def configure_runtime_extractor(cmake_binary: Path, build_dir: Path) -> None:
     run_logged_command(command, check=True)
 
 
-def write_runtime_capture_config(
-    build_dir: Path,
-    source_file: Path,
-    source_root_relative: Path,
-) -> None:
-    """Write the per-source capture configuration header consumed by the runtime wrapper."""
-    source_file_relative = relative_to_onnxruntime_org(source_file)
+def helper_source_files(source_file: Path) -> list[Path]:
+    """Return helper implementation files that should be included for one test source."""
     ort_source_root = repo_root() / "onnxruntime-org" / "onnxruntime"
-    generated_dir = build_dir / "generated"
-    generated_dir.mkdir(parents=True, exist_ok=True)
-    config_path = generated_dir / "emx_runtime_capture_config.h"
-    extra_includes_path = generated_dir / "emx_runtime_capture_extra_includes.h"
-
     include_pattern = re.compile(r'#include\s+"([^"]+)"')
     source_text = source_file.read_text(encoding="utf-8", errors="ignore")
-    helper_sources: list[str] = []
+    helper_sources: list[Path] = []
+
     for match in include_pattern.finditer(source_text):
         include_path = match.group(1)
         if not include_path.endswith(".h"):
             continue
         candidate = ort_source_root / Path(include_path).with_suffix(".cc")
         if candidate.exists():
-            helper_sources.append(candidate.resolve().as_posix())
+            helper_sources.append(candidate.resolve())
 
-    helper_sources = sorted(set(helper_sources))
+    return sorted(set(helper_sources))
 
-    config_path.write_text(
+
+def write_runtime_extra_includes_header(
+    output_path: Path,
+    helper_sources: Iterable[Path],
+) -> None:
+    """Write the helper-include header consumed by one extractor target."""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
         "\n".join(
             [
                 "#pragma once",
-                f'#define EMX_ORT_CAPTURE_TEST_SOURCE "{source_file.resolve().as_posix()}"',
-                f'#define EMX_ORT_CAPTURE_SOURCE_FILE_REL "{source_file_relative.as_posix()}"',
-                f'#define EMX_ORT_CAPTURE_SOURCE_ROOT_REL "{source_root_relative.as_posix()}"',
+                *[f'#include "{helper_source.as_posix()}"' for helper_source in helper_sources],
                 "",
             ]
         ),
         encoding="utf-8",
     )
-    extra_includes_path.write_text(
-        "\n".join(
-            ["#pragma once", *[f'#include "{path}"' for path in helper_sources], ""]
-        ),
-        encoding="utf-8",
+
+
+def write_runtime_target_manifest(
+    build_dir: Path,
+    source_files: list[Path],
+    source_root_relative: Path,
+) -> list[RuntimeTargetSpec]:
+    """Write the generated CMake target manifest for all selected runtime sources."""
+    generated_dir = build_dir / "generated"
+    include_dir = generated_dir / "includes"
+    json_dir = build_dir / "json"
+    include_dir.mkdir(parents=True, exist_ok=True)
+    json_dir.mkdir(parents=True, exist_ok=True)
+
+    target_specs: list[RuntimeTargetSpec] = []
+    manifest_lines = [
+        "# Generated by scripts/extract_test_artifacts.py",
+        "set(EMX_ORT_RUNTIME_EXTRACTOR_TARGETS",
+    ]
+
+    for index, source_file in enumerate(source_files):
+        source_file_relative = relative_to_onnxruntime_org(source_file)
+        sanitized_name = sanitize_filename(source_file_relative)
+        extra_includes_header = include_dir / f"{index:04d}_{sanitized_name}_extra_includes.h"
+        write_runtime_extra_includes_header(
+            extra_includes_header,
+            helper_source_files(source_file),
+        )
+
+        spec = RuntimeTargetSpec(
+            index=index,
+            target_name=runtime_target_name(index),
+            source_file=source_file,
+            source_file_relative=source_file_relative,
+            extra_includes_header=extra_includes_header,
+            output_path=json_dir / f"{index:04d}_{sanitized_name}.json",
+        )
+        target_specs.append(spec)
+        manifest_lines.append(f"  {cmake_quote(spec.target_name)}")
+
+    manifest_lines.append(")")
+    manifest_lines.append("")
+
+    for spec in target_specs:
+        manifest_lines.append(
+            "emx_add_runtime_extractor_target("
+            f"{cmake_quote(spec.target_name)} "
+            f"{cmake_quote(spec.source_file.resolve().as_posix())} "
+            f"{cmake_quote(spec.source_file_relative.as_posix())} "
+            f"{cmake_quote(source_root_relative.as_posix())} "
+            f"{cmake_quote(spec.extra_includes_header.resolve().as_posix())}"
+            ")"
+        )
+
+    manifest_lines.append("")
+    manifest_lines.append(
+        "add_custom_target(ort_cpp_test_runtime_extractors DEPENDS ${EMX_ORT_RUNTIME_EXTRACTOR_TARGETS})"
     )
 
+    manifest_path = generated_dir / "emx_runtime_targets.cmake"
+    manifest_path.write_text("\n".join(manifest_lines) + os.linesep, encoding="utf-8")
+    return target_specs
 
-def build_runtime_extractor(cmake_binary: Path, build_dir: Path) -> Path:
-    """Build the runtime extractor target and return the executable path."""
-    command = [str(cmake_binary), "--build", str(build_dir), "--target", "ort_cpp_test_runtime_extractor"]
-    if os.name == "nt":
-        command.extend(["--config", "RelWithDebInfo"])
-    run_logged_command(command, check=True)
 
-    candidates = []
+def resolve_runtime_extractor_binary(build_dir: Path, target_name: str) -> Path:
+    """Locate the built extractor executable for one generated target."""
+    candidates: list[Path] = []
     if os.name == "nt":
-        candidates.append(build_dir / "RelWithDebInfo" / "ort_cpp_test_runtime_extractor.exe")
+        candidates.extend(
+            [
+                build_dir / "RelWithDebInfo" / f"{target_name}.exe",
+                build_dir / f"{target_name}.exe",
+            ]
+        )
     else:
-        candidates.append(build_dir / "ort_cpp_test_runtime_extractor")
+        candidates.extend(
+            [
+                build_dir / target_name,
+                build_dir / "bin" / target_name,
+            ]
+        )
 
     for candidate in candidates:
         if candidate.exists():
             return candidate
 
-    fallback = next(build_dir.rglob("ort_cpp_test_runtime_extractor*"), None)
+    fallback = next(build_dir.rglob(f"{target_name}*"), None)
     if fallback is not None:
         return fallback
 
     raise FileNotFoundError(
-        f"Unable to locate the built runtime extractor under {build_dir.resolve()}"
+        f"Unable to locate the built runtime extractor target {target_name} under {build_dir.resolve()}"
     )
+
+
+def build_runtime_extractors(
+    cmake_binary: Path,
+    build_dir: Path,
+    target_specs: list[RuntimeTargetSpec],
+    jobs: int,
+) -> dict[str, Path]:
+    """Build all generated runtime extractor targets and return their executable paths."""
+    command = [
+        str(cmake_binary),
+        "--build",
+        str(build_dir),
+        "--target",
+        "ort_cpp_test_runtime_extractors",
+        "--parallel",
+        str(jobs),
+    ]
+    if os.name == "nt":
+        command.extend(["--config", "RelWithDebInfo"])
+    run_logged_command(command, check=True)
+
+    return {
+        spec.target_name: resolve_runtime_extractor_binary(build_dir, spec.target_name)
+        for spec in target_specs
+    }
 
 
 def run_runtime_extractor(
     extractor_binary: Path,
-    source_file: Path,
     output_path: Path,
     artifacts_output: Path,
     gtest_filter: str | None,
@@ -274,18 +422,127 @@ def load_runtime_json(path: Path) -> dict:
         raise ValueError(f"Runtime JSON is not valid UTF-8: {path}") from error
 
 
+def execute_runtime_target(
+    spec: RuntimeTargetSpec,
+    extractor_binary: Path,
+    artifacts_output: Path,
+    gtest_filter: str | None,
+) -> tuple[int, dict | None, dict | None]:
+    """Run one extractor binary and return either a runtime JSON chunk or a failure record."""
+    try:
+        runtime_result = run_runtime_extractor(
+            extractor_binary,
+            spec.output_path,
+            artifacts_output,
+            gtest_filter,
+        )
+        runtime_stdout = runtime_result.stdout.decode("utf-8", errors="replace")
+        runtime_stderr = runtime_result.stderr.decode("utf-8", errors="replace")
+
+        if runtime_result.returncode != 0 and not spec.output_path.exists():
+            raise subprocess.CalledProcessError(
+                runtime_result.returncode,
+                runtime_result.args,
+                output=runtime_stdout,
+                stderr=runtime_stderr,
+            )
+
+        runtime_chunk = load_runtime_json(spec.output_path)
+    except (subprocess.CalledProcessError, ValueError) as error:
+        exit_code = error.returncode if isinstance(error, subprocess.CalledProcessError) else None
+        error_message = str(error)
+        if isinstance(error, subprocess.CalledProcessError) and error.stderr:
+            error_message = f"{error_message}\n{error.stderr.strip()}"
+        return (
+            spec.index,
+            None,
+            {
+                "source_file": spec.source_file_relative.as_posix(),
+                "exit_code": exit_code,
+                "error": error_message,
+            },
+        )
+
+    if runtime_result.returncode != 0:
+        runtime_chunk.setdefault("warnings", []).append(
+            f"gtest exited with code {runtime_result.returncode} after writing runtime JSON."
+        )
+
+    return spec.index, runtime_chunk, None
+
+
+def run_runtime_targets(
+    target_specs: list[RuntimeTargetSpec],
+    extractor_binaries: dict[str, Path],
+    artifacts_output: Path,
+    gtest_filter: str | None,
+    jobs: int,
+) -> tuple[list[dict], list[dict]]:
+    """Run all compiled extractor targets, optionally in parallel."""
+    successful_chunks_by_index: dict[int, dict] = {}
+    failed_files: list[dict] = []
+
+    if jobs == 1 or len(target_specs) == 1:
+        for current_file, spec in enumerate(target_specs, start=1):
+            print(
+                f"=== Runtime extractor [{current_file}/{len(target_specs)}] {spec.source_file_relative.as_posix()} ===",
+                flush=True,
+            )
+            index, runtime_chunk, failed_file = execute_runtime_target(
+                spec,
+                extractor_binaries[spec.target_name],
+                artifacts_output,
+                gtest_filter,
+            )
+            if runtime_chunk is not None:
+                successful_chunks_by_index[index] = runtime_chunk
+            if failed_file is not None:
+                failed_files.append(failed_file)
+    else:
+        max_workers = min(jobs, len(target_specs))
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            future_by_spec = {}
+            for current_file, spec in enumerate(target_specs, start=1):
+                print(
+                    f"=== Runtime extractor [{current_file}/{len(target_specs)}] {spec.source_file_relative.as_posix()} ===",
+                    flush=True,
+                )
+                future = executor.submit(
+                    execute_runtime_target,
+                    spec,
+                    extractor_binaries[spec.target_name],
+                    artifacts_output,
+                    gtest_filter,
+                )
+                future_by_spec[future] = spec
+
+            for future in as_completed(future_by_spec):
+                index, runtime_chunk, failed_file = future.result()
+                if runtime_chunk is not None:
+                    successful_chunks_by_index[index] = runtime_chunk
+                if failed_file is not None:
+                    failed_files.append(failed_file)
+
+    merged_chunks = [
+        successful_chunks_by_index[index]
+        for index in range(len(target_specs))
+        if index in successful_chunks_by_index
+    ]
+    return merged_chunks, failed_files
+
+
 def run_runtime_pipeline(
     source_path: Path,
     output_path: Path,
     artifacts_output: Path,
     rebuild: bool,
     gtest_filter: str | None,
+    jobs: int,
 ) -> None:
     """Configure, build, execute, and merge runtime extraction output."""
     artifacts_output = artifacts_output.resolve()
     cmake_binary = detect_cmake_binary()
     build_dir = repo_root() / "build" / "ort_runtime_extractor"
-    temp_output_dir = build_dir / "json"
     source_files = runtime_source_files(source_path)
 
     if not source_files:
@@ -299,59 +556,26 @@ def run_runtime_pipeline(
     else:
         source_root_relative = relative_to_onnxruntime_org(source_path)
 
-    merged_chunks: list[dict] = []
-    failed_files: list[dict] = []
+    target_specs = write_runtime_target_manifest(
+        build_dir,
+        source_files,
+        source_root_relative,
+    )
 
     configure_runtime_extractor(cmake_binary, build_dir)
-
-    for index, source_file in enumerate(source_files):
-        source_file_relative = relative_to_onnxruntime_org(source_file)
-        temp_output = temp_output_dir / f"{index:04d}_{sanitize_filename(source_file_relative)}.json"
-        current_file = index + 1
-        print(
-            f"=== Runtime extractor [{current_file}/{len(source_files)}] {source_file_relative.as_posix()} ===",
-            flush=True,
-        )
-
-        try:
-            write_runtime_capture_config(build_dir, source_file, source_root_relative)
-            extractor_binary = build_runtime_extractor(cmake_binary, build_dir)
-            runtime_result = run_runtime_extractor(
-                extractor_binary,
-                source_file,
-                temp_output,
-                artifacts_output,
-                gtest_filter,
-            )
-            runtime_stdout = runtime_result.stdout.decode("utf-8", errors="replace")
-            runtime_stderr = runtime_result.stderr.decode("utf-8", errors="replace")
-
-            if runtime_result.returncode != 0 and not temp_output.exists():
-                raise subprocess.CalledProcessError(
-                    runtime_result.returncode,
-                    runtime_result.args,
-                    output=runtime_stdout,
-                    stderr=runtime_stderr,
-                )
-
-            runtime_chunk = load_runtime_json(temp_output)
-        except (subprocess.CalledProcessError, ValueError) as error:
-            exit_code = error.returncode if isinstance(error, subprocess.CalledProcessError) else None
-            failed_files.append(
-                {
-                    "source_file": source_file_relative.as_posix(),
-                    "exit_code": exit_code,
-                    "error": str(error),
-                }
-            )
-            continue
-
-        if runtime_result.returncode != 0:
-            runtime_chunk.setdefault("warnings", []).append(
-                f"gtest exited with code {runtime_result.returncode} after writing runtime JSON."
-            )
-
-        merged_chunks.append(runtime_chunk)
+    extractor_binaries = build_runtime_extractors(
+        cmake_binary,
+        build_dir,
+        target_specs,
+        jobs,
+    )
+    merged_chunks, failed_files = run_runtime_targets(
+        target_specs,
+        extractor_binaries,
+        artifacts_output,
+        gtest_filter,
+        jobs,
+    )
 
     if not merged_chunks:
         raise RuntimeError("Runtime extractor did not produce any successful per-file outputs.")
@@ -360,7 +584,7 @@ def run_runtime_pipeline(
         output_path,
         source_root_relative,
         artifacts_output,
-        len(source_files),
+        len(target_specs),
         len(merged_chunks),
         merged_chunks,
         failed_files,
@@ -403,7 +627,16 @@ def parse_args() -> argparse.Namespace:
         "--gtest-filter",
         help="Optional gtest filter forwarded to the runtime extractor.",
     )
-    return parser.parse_args()
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        default=default_parallel_jobs(),
+        help="Maximum parallel extractor builds and executions. Default: %(default)s.",
+    )
+    args = parser.parse_args()
+    if args.jobs < 1:
+        parser.error("--jobs must be at least 1")
+    return args
 
 
 def main() -> int:
@@ -417,6 +650,7 @@ def main() -> int:
             args.artifacts_output,
             args.rebuild,
             args.gtest_filter,
+            args.jobs,
         )
     except subprocess.CalledProcessError as error:
         print(f"Extractor command failed with exit code {error.returncode}.", file=sys.stderr)

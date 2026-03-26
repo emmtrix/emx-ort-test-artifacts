@@ -9861,6 +9861,14 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DBlkZp_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DSym_run0",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_integer16_test/MatMulInteger16_1_run0",
       "expected_result": "OK"
     },

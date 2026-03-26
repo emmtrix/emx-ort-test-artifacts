@@ -24,7 +24,6 @@
 #include "gtest/gtest.h"
 
 #include "core/framework/tensorprotoutils.h"
-#include "emx_runtime_capture_config.h"
 
 namespace fs = std::filesystem;
 
@@ -34,7 +33,7 @@ namespace {
 bool IsQuantizeLstmReferenceHelper(const CapturingOpTester& tester) {
   constexpr std::string_view kQuantizeLstmSource =
       "onnxruntime/test/contrib_ops/quantize_lstm_op_test.cc";
-  return std::string_view(EMX_ORT_CAPTURE_SOURCE_FILE_REL) == kQuantizeLstmSource &&
+  return std::string_view(tester.CapturedSourceFile()) == kQuantizeLstmSource &&
          tester.CapturedOpName() == "LSTM" &&
          tester.CapturedDomain() == onnxruntime::kOnnxDomain;
 }
@@ -838,7 +837,7 @@ CapturedRecord BuildRecordFromTester(
     const std::unordered_set<std::string>* excluded_provider_types,
     const std::vector<std::unique_ptr<onnxruntime::IExecutionProvider>>* execution_providers) {
   CapturedRecord record;
-  record.source_file = EMX_ORT_CAPTURE_SOURCE_FILE_REL;
+  record.source_file = tester.CapturedSourceFile();
   record.run_index = run_index;
   record.saw_run_call = saw_run_call;
   record.op_name = tester.CapturedOpName();
@@ -918,19 +917,14 @@ CaptureCollector& CaptureCollector::Instance() {
   return collector;
 }
 
-void CaptureCollector::Reset(std::string source_root_relative, std::string source_file_relative, fs::path artifact_root) {
+void CaptureCollector::Reset(std::string source_root_relative, fs::path artifact_root) {
   source_root_relative_ = std::move(source_root_relative);
-  source_file_relative_ = std::move(source_file_relative);
   artifact_root_ = std::move(artifact_root);
   records_.clear();
   next_run_index_by_test_case_.clear();
 }
 
 void CaptureCollector::AddRecord(CapturedRecord record) {
-  if (record.source_file.empty()) {
-    record.source_file = source_file_relative_;
-  }
-
   records_.push_back(std::move(record));
 }
 
@@ -961,8 +955,19 @@ void CaptureCollector::WriteJson(const fs::path& output_path) const {
   output << "\"capture_mode\": \"runtime\",\n";
   WriteIndent(output, 2);
   output << "\"source_root\": \"" << JsonEscape(source_root_relative_) << "\",\n";
-  WriteIndent(output, 2);
-  output << "\"source_file\": \"" << JsonEscape(source_file_relative_) << "\",\n";
+  if (!records_.empty()) {
+    const std::string& first_source_file = records_.front().source_file;
+    const bool single_source_file = std::all_of(
+        records_.begin(),
+        records_.end(),
+        [&first_source_file](const CapturedRecord& record) {
+          return record.source_file == first_source_file;
+        });
+    if (single_source_file) {
+      WriteIndent(output, 2);
+      output << "\"source_file\": \"" << JsonEscape(first_source_file) << "\",\n";
+    }
+  }
   WriteIndent(output, 2);
   output << "\"artifact_root\": \"" << JsonEscape(artifact_root_.generic_string()) << "\",\n";
   WriteIndent(output, 2);
