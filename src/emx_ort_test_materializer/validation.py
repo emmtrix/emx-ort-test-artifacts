@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ctypes
 import json
 import re
 import sys
@@ -168,7 +169,17 @@ def create_input_ort_value(input_proto: onnx.TensorProto) -> ort.OrtValue:
     except RuntimeError:
         if array.dtype.name not in fallback_dtype_names:
             raise
-        return ort.OrtValue.ortvalue_from_numpy_with_onnx_type(array, fallback_onnx_type)
+        # For int4/uint4, numpy stores one element per byte (unpacked) but ORT
+        # expects the data in the packed TensorProto wire format (two nibbles per
+        # byte).  Create an OrtValue with the correct shape and element type,
+        # then copy the raw packed bytes from the TensorProto directly into its
+        # data buffer to avoid the unpacked-vs-packed mismatch.
+        ort_value = ort.OrtValue.ortvalue_from_shape_and_type(
+            list(input_proto.dims), fallback_onnx_type
+        )
+        raw_bytes = bytes(input_proto.raw_data)
+        ctypes.memmove(ort_value.data_ptr(), raw_bytes, len(raw_bytes))
+        return ort_value
 
 
 def requires_ort_value_feed(input_proto: onnx.TensorProto) -> bool:

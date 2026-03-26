@@ -1594,67 +1594,67 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run0",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run1",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run10",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run11",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run12",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run13",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run14",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run15",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run2",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run3",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run4",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run5",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run6",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run7",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run8",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0NoZeroPoints_run9",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_4Bits_run0",
@@ -1722,387 +1722,387 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run0",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run1",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run10",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run11",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run12",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run13",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run14",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run15",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run16",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run17",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run18",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run19",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run2",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run20",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run21",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run22",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run23",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run24",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run25",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run26",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run27",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run28",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run29",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run3",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run30",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run31",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run4",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run5",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run6",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run7",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run8",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis0WithZeroPoints_run9",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run0",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run1",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run10",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run11",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run12",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run13",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run14",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run15",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run16",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run17",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run18",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run19",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run2",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run20",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run21",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run22",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run23",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run24",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run25",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run26",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run27",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run28",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run29",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run3",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run30",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run31",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run4",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run5",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run6",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run7",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run8",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis1_run9",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run0",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run1",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run10",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run11",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run12",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run13",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run14",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run15",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run16",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run17",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run18",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run19",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run2",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run20",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run21",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run22",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run23",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run24",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run25",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run26",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run27",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run28",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run29",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run3",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run30",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run31",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run4",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run5",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run6",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run7",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run8",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/GatherAxis2_run9",
-      "expected_result": "test_data_set_0 output_0 (output): FAIL - values differ"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/gather_block_quantized_op_test/InvalidBlockSize_run0",
@@ -6110,6 +6110,14 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/Float32_8b_AccuracyLevel4_run99",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DBlkZp_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DSym_run0",
       "expected_result": "OK"
     },
     {
