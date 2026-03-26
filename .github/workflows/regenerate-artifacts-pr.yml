@@ -24,7 +24,7 @@ jobs:
       CHECKOUT_REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
       CHECKOUT_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       PUSH_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
-      CACHE_REF_NAME: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+      CACHE_DELETE_REF: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/merge', github.event.pull_request.number) || format('refs/heads/{0}', github.ref_name) }}
       # Route compiler invocations through ccache during CMake builds.
       CMAKE_C_COMPILER_LAUNCHER: ccache
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
@@ -89,7 +89,7 @@ jobs:
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh cache delete "${CCACHE_KEY}" --ref "refs/heads/${CACHE_REF_NAME}" || true
+        run: gh cache delete "${CCACHE_KEY}" --ref "${CACHE_DELETE_REF}" || true
 
       # Save the warmed cache even when later steps fail.
       - name: Save ccache objects
