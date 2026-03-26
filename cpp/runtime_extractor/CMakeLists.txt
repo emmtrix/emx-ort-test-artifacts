@@ -48,6 +48,19 @@ target_compile_definitions(
     ORT_ENABLE_STREAM
 )
 
+if(onnxruntime_DISABLE_RTTI)
+  target_compile_definitions(
+    ort_cpp_test_runtime_extractor
+    PRIVATE
+      ORT_NO_RTTI
+  )
+  target_compile_options(
+    ort_cpp_test_runtime_extractor
+    PRIVATE
+      "$<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>"
+  )
+endif()
+
 if(WIN32)
   target_compile_definitions(
     ort_cpp_test_runtime_extractor
