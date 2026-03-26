@@ -59,7 +59,7 @@ jobs:
       # Restore the shared compiler cache before configuring or building the extractor.
       - name: Restore ccache objects
         id: ccache-restore
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ${{ env.CCACHE_DIR }}
           restore-keys: |
