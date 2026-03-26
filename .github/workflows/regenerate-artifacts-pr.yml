@@ -10,6 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -23,12 +24,14 @@ jobs:
       CHECKOUT_REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
       CHECKOUT_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       PUSH_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+      CACHE_REF_NAME: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       # Route compiler invocations through ccache during CMake builds.
       CMAKE_C_COMPILER_LAUNCHER: ccache
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
       # Persist the compiler cache inside the workspace so actions/cache can store it.
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_MAXSIZE: 2G
+      CCACHE_KEY: ccache-${{ runner.os }}-regenerate-artifacts
 
     steps:
       - name: Check out target branch
@@ -55,7 +58,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: ccache-${{ runner.os }}-${{ hashFiles('cpp/**') }}
+          key: ${{ env.CCACHE_KEY }}
           restore-keys: |
             ccache-${{ runner.os }}-
 
@@ -81,13 +84,20 @@ jobs:
         if: always()
         run: ccache -s
 
+      # Keep exactly one branch-local cache entry by deleting the previous fixed key first.
+      - name: Delete existing branch ccache
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh cache delete "${CCACHE_KEY}" --ref "refs/heads/${CACHE_REF_NAME}" || true
+
       # Save the warmed cache even when later steps fail.
       - name: Save ccache objects
         if: always()
         uses: actions/cache/save@v4
         with:
           path: ${{ github.workspace }}/.ccache
-          key: ${{ steps.ccache-restore.outputs.cache-primary-key }}
+          key: ${{ env.CCACHE_KEY }}
 
       - name: Update validation expectations
         run: python scripts/update_artifact_validation_expectations.py
