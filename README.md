@@ -142,7 +142,8 @@ ORT test runner, executes the selected C++ unit tests, and captures the real
 Current behavior:
 
 - Builds ONNX Runtime test utilities without modifying the submodule.
-- Compiles a wrapper executable that includes the selected ORT test source.
+- Generates one wrapper target per selected ORT test source.
+- Builds those wrapper targets in parallel after the shared ORT libraries are ready.
 - Scans only `OpTester`-based C++ sources in directory mode.
 - Redirects `OpTester` usage through a capturing subclass.
 - Writes `model.onnx`, `test_data_set_0/input_*.pb`, and `test_data_set_0/output_*.pb`
@@ -162,13 +163,15 @@ Example:
 python scripts/extract_test_artifacts.py \
   --cpp-source onnxruntime-org/onnxruntime/test/contrib_ops/qlinear_lookup_table_test.cc \
   --artifacts-output artifacts \
-  --gtest-filter QLinearLookupTableBasedOperatorTests.*
+  --gtest-filter QLinearLookupTableBasedOperatorTests.* \
+  --jobs 4
 ```
 
 The runtime command always emits JSON alongside the artifacts. By default, it
 writes to `build/ort_runtime_contrib_ops.json`, artifacts are written under
 `artifacts/`, and temporary build products stay under the ignored `build/`
-directory.
+directory. In directory mode, the extractor now parallelizes both the wrapper
+build step and the per-source test execution via `--jobs`.
 
 Each artifact directory may also contain a `validation.json` file with replay
 metadata captured from the original ORT test. The file currently uses this

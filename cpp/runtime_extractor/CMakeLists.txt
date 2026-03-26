@@ -25,69 +25,91 @@ get_filename_component(EMX_ORT_REPO_ROOT "${EMX_ORT_REPO_ROOT}" ABSOLUTE)
 
 add_subdirectory("${EMX_ORT_REPO_ROOT}/onnxruntime-org/cmake" "${CMAKE_BINARY_DIR}/onnxruntime")
 
-add_executable(
-  ort_cpp_test_runtime_extractor
-  "${EMX_ORT_REPO_ROOT}/cpp/runtime_extractor/ort_runtime_capture.cpp"
-  "${EMX_ORT_REPO_ROOT}/cpp/runtime_extractor/ort_runtime_extractor.cpp"
-)
-
-target_compile_features(ort_cpp_test_runtime_extractor PRIVATE cxx_std_20)
-target_include_directories(
-  ort_cpp_test_runtime_extractor
-  PRIVATE
-    "${EMX_ORT_REPO_ROOT}"
-    "${EMX_ORT_REPO_ROOT}/onnxruntime-org/onnxruntime"
-    "${EMX_ORT_REPO_ROOT}/onnxruntime-org/include/onnxruntime"
-    "${CMAKE_BINARY_DIR}/onnxruntime"
-    "${CMAKE_BINARY_DIR}/generated"
-)
-target_compile_definitions(
-  ort_cpp_test_runtime_extractor
-  PRIVATE
-    _USE_MATH_DEFINES
-    ORT_ENABLE_STREAM
-)
-
-if(onnxruntime_DISABLE_RTTI)
+function(emx_apply_runtime_extractor_target_settings target_name)
+  target_compile_features("${target_name}" PRIVATE cxx_std_20)
+  target_include_directories(
+    "${target_name}"
+    PRIVATE
+      "${EMX_ORT_REPO_ROOT}"
+      "${EMX_ORT_REPO_ROOT}/onnxruntime-org/onnxruntime"
+      "${EMX_ORT_REPO_ROOT}/onnxruntime-org/include/onnxruntime"
+      "${CMAKE_BINARY_DIR}/onnxruntime"
+      "${CMAKE_BINARY_DIR}/generated"
+  )
   target_compile_definitions(
-    ort_cpp_test_runtime_extractor
+    "${target_name}"
     PRIVATE
-      ORT_NO_RTTI
+      _USE_MATH_DEFINES
+      ORT_ENABLE_STREAM
   )
-  target_compile_options(
-    ort_cpp_test_runtime_extractor
-    PRIVATE
-      "$<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>"
-  )
-endif()
 
-if(WIN32)
+  if(onnxruntime_DISABLE_RTTI)
+    target_compile_definitions(
+      "${target_name}"
+      PRIVATE
+        ORT_NO_RTTI
+    )
+    target_compile_options(
+      "${target_name}"
+      PRIVATE
+        "$<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>"
+    )
+  endif()
+
+  if(WIN32)
+    target_compile_definitions(
+      "${target_name}"
+      PRIVATE
+        NOMINMAX
+        WIN32_LEAN_AND_MEAN
+    )
+  endif()
+
+  if(MSVC)
+    target_compile_options("${target_name}" PRIVATE /MP /utf-8)
+  endif()
+
+  target_link_libraries(
+    "${target_name}"
+    PRIVATE
+      onnxruntime_unittest_utils
+      onnxruntime_session
+      onnxruntime_optimizer
+      onnxruntime_providers
+      onnxruntime_util
+      onnxruntime_lora
+      onnxruntime_framework
+      onnxruntime_graph
+      onnxruntime_mlas
+      onnxruntime_common
+      onnxruntime_flatbuffers
+      GTest::gtest
+      GTest::gmock
+  )
+endfunction()
+
+function(emx_add_runtime_extractor_target target_name source_file source_file_rel source_root_rel extra_includes_header)
+  add_executable(
+    "${target_name}"
+    "${EMX_ORT_REPO_ROOT}/cpp/runtime_extractor/ort_runtime_capture.cpp"
+    "${EMX_ORT_REPO_ROOT}/cpp/runtime_extractor/ort_runtime_extractor.cpp"
+  )
+
   target_compile_definitions(
-    ort_cpp_test_runtime_extractor
+    "${target_name}"
     PRIVATE
-      NOMINMAX
-      WIN32_LEAN_AND_MEAN
+      EMX_ORT_CAPTURE_TEST_SOURCE="${source_file}"
+      EMX_ORT_CAPTURE_SOURCE_FILE_REL="${source_file_rel}"
+      EMX_ORT_CAPTURE_SOURCE_ROOT_REL="${source_root_rel}"
+      EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER="${extra_includes_header}"
   )
+
+  emx_apply_runtime_extractor_target_settings("${target_name}")
+endfunction()
+
+set(EMX_RUNTIME_TARGETS_FILE "${CMAKE_BINARY_DIR}/generated/emx_runtime_targets.cmake")
+if(NOT EXISTS "${EMX_RUNTIME_TARGETS_FILE}")
+  message(FATAL_ERROR "Missing generated runtime target manifest: ${EMX_RUNTIME_TARGETS_FILE}")
 endif()
 
-if(MSVC)
-  target_compile_options(ort_cpp_test_runtime_extractor PRIVATE /MP /utf-8)
-endif()
-
-target_link_libraries(
-  ort_cpp_test_runtime_extractor
-  PRIVATE
-    onnxruntime_unittest_utils
-    onnxruntime_session
-    onnxruntime_optimizer
-    onnxruntime_providers
-    onnxruntime_util
-    onnxruntime_lora
-    onnxruntime_framework
-    onnxruntime_graph
-    onnxruntime_mlas
-    onnxruntime_common
-    onnxruntime_flatbuffers
-    GTest::gtest
-    GTest::gmock
-)
+include("${EMX_RUNTIME_TARGETS_FILE}")

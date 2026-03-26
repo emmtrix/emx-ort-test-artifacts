@@ -14,6 +14,10 @@
 
 #include "test/unittest_util/op_tester.h"
 
+#ifndef EMX_ORT_CAPTURE_SOURCE_FILE_REL
+#error "EMX_ORT_CAPTURE_SOURCE_FILE_REL must be defined for the runtime extractor target."
+#endif
+
 namespace emx::ort_runtime {
 
 struct CapturedTensor {
@@ -77,7 +81,7 @@ class CaptureCollector {
  public:
   static CaptureCollector& Instance();
 
-  void Reset(std::string source_root_relative, std::string source_file_relative, std::filesystem::path artifact_root);
+  void Reset(std::string source_root_relative, std::filesystem::path artifact_root);
   void AddRecord(CapturedRecord record);
   int AllocateRunIndex(std::string_view test_suite, std::string_view test_name);
   size_t RecordCount() const noexcept;
@@ -86,7 +90,6 @@ class CaptureCollector {
 
  private:
   std::string source_root_relative_;
-  std::string source_file_relative_;
   std::filesystem::path artifact_root_;
   std::vector<CapturedRecord> records_;
   std::unordered_map<std::string, int> next_run_index_by_test_case_;
@@ -125,6 +128,7 @@ class CapturingOpTester : public onnxruntime::test::OpTester {
   const std::string& CapturedOpName() const noexcept { return Op(); }
   const std::string& CapturedDomain() const noexcept { return Domain(); }
   int CapturedOpset() const noexcept { return Opset(); }
+  const std::string& CapturedSourceFile() const noexcept { return source_file_; }
   std::vector<onnxruntime::test::BaseTester::Data>& CapturedInputData() { return GetInputData(); }
   std::vector<onnxruntime::test::BaseTester::Data>& CapturedOutputData() { return GetOutputData(); }
   std::vector<size_t>& CapturedInitializerIndexes() { return GetInitializerIndexes(); }
@@ -132,6 +136,7 @@ class CapturingOpTester : public onnxruntime::test::OpTester {
   std::vector<std::string> CapturedExcludedProviderTypes() const;
 
  private:
+  std::string source_file_ = EMX_ORT_CAPTURE_SOURCE_FILE_REL;
   void CaptureSnapshot(
       bool saw_run_call,
       ExpectResult expect_result = ExpectResult::kExpectSuccess,

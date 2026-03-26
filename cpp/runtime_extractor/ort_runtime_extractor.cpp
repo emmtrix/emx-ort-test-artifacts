@@ -39,9 +39,21 @@
 #include "core/session/onnxruntime_cxx_api.h"
 #include "gtest/gtest.h"
 
-#include "emx_runtime_capture_config.h"
-#include "emx_runtime_capture_extra_includes.h"
 #include "cpp/runtime_extractor/ort_runtime_capture.h"
+
+#ifndef EMX_ORT_CAPTURE_TEST_SOURCE
+#error "EMX_ORT_CAPTURE_TEST_SOURCE must be defined for the runtime extractor target."
+#endif
+
+#ifndef EMX_ORT_CAPTURE_SOURCE_ROOT_REL
+#error "EMX_ORT_CAPTURE_SOURCE_ROOT_REL must be defined for the runtime extractor target."
+#endif
+
+#ifndef EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER
+#define EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER "cpp/runtime_extractor/ort_runtime_capture_extra_includes_default.h"
+#endif
+
+#include EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER
 
 std::unique_ptr<Ort::Env> ort_env;
 
@@ -104,7 +116,6 @@ int main(int argc, char** argv) {
     int forwarded_argc = static_cast<int>(forwarded_args.size());
     emx::ort_runtime::CaptureCollector::Instance().Reset(
         EMX_ORT_CAPTURE_SOURCE_ROOT_REL,
-        EMX_ORT_CAPTURE_SOURCE_FILE_REL,
         artifact_root);
 
     emx::ort_runtime::SetupOrtEnvironment();
