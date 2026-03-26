@@ -7,12 +7,12 @@ Aggregates non-OK artifact validation outcomes.
 
 Expectation source: `tests/artifact_validation_expected.json`
 
-Validated cases: 3244 / 3259 OK, 15 non-OK.
+Validated cases: 4174 / 4187 OK, 13 non-OK.
 
 | Error message | Count | Sources |
 | --- | --- | --- |
 | Input count mismatch | 8 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test |
-| ONNX Runtime error | 7 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test, artifacts/onnxruntime/test/contrib_ops/moe_test |
+| ONNX Runtime error | 5 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test |
 
 ## Error frequency by source
 
@@ -20,7 +20,6 @@ Validated cases: 3244 / 3259 OK, 15 non-OK.
 | --- | --- | --- |
 | ONNX Runtime error | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | 5 |
 | Input count mismatch | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | 8 |
-| ONNX Runtime error | artifacts/onnxruntime/test/contrib_ops/moe_test | 2 |
 
 ## Failing artifact cases
 
@@ -41,5 +40,3 @@ Lists every artifact case with a non-OK expected validation result.
 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run1 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run2 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run3 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run0 | artifacts/onnxruntime/test/contrib_ops/moe_test | [ONNXRuntimeError] : 10 : INVALID_GRAPH : Load model from /home/runner/work/emx-ort-test-materializer/emx-ort-test-materializer/artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run0/model.onnx failed:This is an invalid model. In Node, ("node1", QMoE, "com.microsoft", -1) : ("input": tensor(float16),"router_probs": tensor(float16),"fc1_experts_weights": tensor(uint8),"fc1_scales": tensor(float),"","fc2_experts_weights": tensor(uint8),"fc2_scales": tensor(float),"fc2_experts_bias": tensor(float16),"","","","","","","router_weights": tensor(float16),) -> ("output": tensor(float16),) , Error Node(node1) with schema(com.microsoft::QMoE:1) has input size 15 not in range [min=7, max=14]. |
-| artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run1 | artifacts/onnxruntime/test/contrib_ops/moe_test | [ONNXRuntimeError] : 10 : INVALID_GRAPH : Load model from /home/runner/work/emx-ort-test-materializer/emx-ort-test-materializer/artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run1/model.onnx failed:This is an invalid model. In Node, ("node1", QMoE, "com.microsoft", -1) : ("input": tensor(float16),"router_probs": tensor(float16),"fc1_experts_weights": tensor(uint8),"fc1_scales": tensor(float),"","fc2_experts_weights": tensor(uint8),"fc2_scales": tensor(float),"fc2_experts_bias": tensor(float16),"","","","","","","router_weights": tensor(float16),) -> ("output": tensor(float16),) , Error Node(node1) with schema(com.microsoft::QMoE:1) has input size 15 not in range [min=7, max=14]. |
