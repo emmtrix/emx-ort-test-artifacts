@@ -235,6 +235,56 @@ std::string SanitizePathComponent(std::string_view value) {
   return sanitized;
 }
 
+void NormalizeGraphProtoForSerialization(ONNX_NAMESPACE::GraphProto* graph);
+
+void NormalizeAttributeProtoForSerialization(ONNX_NAMESPACE::AttributeProto* attribute) {
+  if (attribute->has_g()) {
+    NormalizeGraphProtoForSerialization(attribute->mutable_g());
+  }
+
+  for (int index = 0; index < attribute->graphs_size(); ++index) {
+    NormalizeGraphProtoForSerialization(attribute->mutable_graphs(index));
+  }
+}
+
+void NormalizeNodeProtoForSerialization(ONNX_NAMESPACE::NodeProto* node) {
+  auto* attributes = node->mutable_attribute();
+  for (auto& attribute : *attributes) {
+    NormalizeAttributeProtoForSerialization(&attribute);
+  }
+
+  // Keep ONNX serialization stable across platforms/runs so regenerated artifacts
+  // do not churn just because attribute iteration order changed.
+  std::stable_sort(
+      attributes->begin(),
+      attributes->end(),
+      [](const ONNX_NAMESPACE::AttributeProto& left, const ONNX_NAMESPACE::AttributeProto& right) {
+        if (left.name() != right.name()) {
+          return left.name() < right.name();
+        }
+
+        return left.type() < right.type();
+      });
+}
+
+void NormalizeGraphProtoForSerialization(ONNX_NAMESPACE::GraphProto* graph) {
+  for (auto& node : *graph->mutable_node()) {
+    NormalizeNodeProtoForSerialization(&node);
+  }
+}
+
+void NormalizeModelProtoForSerialization(ONNX_NAMESPACE::ModelProto* model) {
+  if (model->has_graph()) {
+    NormalizeGraphProtoForSerialization(model->mutable_graph());
+  }
+
+  for (auto& function : *model->mutable_functions()) {
+    for (auto& node : *function.mutable_node()) {
+      NormalizeNodeProtoForSerialization(&node);
+    }
+  }
+}
+
 void WriteBinaryProtoToFile(const google::protobuf::MessageLite& proto, const fs::path& output_path) {
   if (output_path.has_parent_path()) {
     fs::create_directories(output_path.parent_path());
@@ -379,6 +429,8 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
     for (const auto& output : model_proto.graph().output()) {
       model_output_names.insert(output.name());
     }
+
+    NormalizeModelProtoForSerialization(&model_proto);
 
     const fs::path model_path = artifact_dir / "model.onnx";
     WriteBinaryProtoToFile(model_proto, model_path);

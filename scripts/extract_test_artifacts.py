@@ -20,6 +20,8 @@ import sys
 from pathlib import Path
 from typing import Iterable
 
+DEFAULT_ORT_TEST_RANDOM_SEED = "1337"
+
 
 def repo_root() -> Path:
     """Return the repository root based on this script location."""
@@ -210,6 +212,10 @@ def run_runtime_extractor(
 ) -> subprocess.CompletedProcess[bytes]:
     """Execute the runtime extractor for one compiled C++ test source file."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    runtime_env = os.environ.copy()
+    # ORT unit tests may generate inputs via RandomValueGenerator with a time-based
+    # default seed, which would churn serialized TensorProto artifacts across runs.
+    runtime_env.setdefault("ORT_TEST_RANDOM_SEED_VALUE", DEFAULT_ORT_TEST_RANDOM_SEED)
 
     command = [
         str(extractor_binary),
@@ -227,6 +233,7 @@ def run_runtime_extractor(
         check=False,
         cwd=ort_test_root(),
         capture_output=True,
+        env=runtime_env,
     )
 
 
