@@ -31,7 +31,7 @@ jobs:
       # Persist the compiler cache inside the workspace so actions/cache can store it.
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_MAXSIZE: 2G
-      CCACHE_KEY: ccache-${{ runner.os }}-regenerate-artifacts
+      CCACHE_KEY: ccache-Linux-regenerate-artifacts
 
     steps:
       - name: Check out target branch
@@ -60,7 +60,7 @@ jobs:
           path: ${{ github.workspace }}/.ccache
           key: ${{ env.CCACHE_KEY }}
           restore-keys: |
-            ccache-${{ runner.os }}-
+            ccache-Linux-
 
       # Print cache contents from the restored archive before zeroing per-run counters.
       - name: Reset ccache statistics
