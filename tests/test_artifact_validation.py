@@ -13,7 +13,10 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from emx_ort_test_materializer.validation import validate_test_case_result
+from emx_ort_test_materializer.validation import (
+    environment_error_message,
+    validate_test_case_result,
+)
 
 
 EXPECTATIONS_PATH = REPO_ROOT / "tests" / "artifact_validation_expected.json"
@@ -37,4 +40,23 @@ EXPECTED_CASES = load_expectations()
 def test_artifact_validation_result(relative_path: str, expected_result: str) -> None:
     """Replay one artifact directory and compare its result string against the stored expectation."""
     actual_result = validate_test_case_result(REPO_ROOT / relative_path)
+    skip_reason = environment_error_message(actual_result)
+    if skip_reason is not None:
+        pytest.skip(skip_reason)
     assert actual_result == expected_result
+
+
+def test_environment_error_message_classifies_local_runtime_limits() -> None:
+    """Recognize environment-dependent ORT failures so pytest can skip them."""
+    message = (
+        "[ONNXRuntimeError] : 1 : FAIL : Load model failed: "
+        "4b quantization not yet supported on this hardware platform!"
+    )
+    assert environment_error_message(message) == message
+
+
+def test_environment_error_message_ignores_artifact_failures() -> None:
+    """Keep artifact-specific validation errors as hard failures."""
+    assert environment_error_message(
+        "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+    ) is None
