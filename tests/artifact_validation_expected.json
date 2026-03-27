@@ -2590,35 +2590,35 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run0",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run1",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run2",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run3",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run0",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run1",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run2",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run3",
-      "expected_result": "test_data_set_0: input count mismatch: files=1, model_inputs=2"
+      "expected_result": "OK"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2Bits_Asymmetric_128x128_run0",
@@ -9862,11 +9862,11 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DBlkZp_run0",
-      "expected_result": "OK"
+      "expected_result": "[ONNXRuntimeError] : 1 : FAIL : Load model from D:/emmtrix/git/emx-ort-test-materializer/artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DBlkZp_run0/model.onnx failed:Node (node1) Op (MatMulFpQ4) [ShapeInferenceError] 4b quantization not yet supported on this hardware platform!"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DSym_run0",
-      "expected_result": "OK"
+      "expected_result": "[ONNXRuntimeError] : 1 : FAIL : Load model from D:/emmtrix/git/emx-ort-test-materializer/artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DSym_run0/model.onnx failed:Node (node1) Op (MatMulFpQ4) [ShapeInferenceError] 4b quantization not yet supported on this hardware platform!"
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_integer16_test/MatMulInteger16_1_run0",

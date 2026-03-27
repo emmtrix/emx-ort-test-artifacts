@@ -70,10 +70,36 @@ def load_tensor_proto(path: Path) -> onnx.TensorProto:
     return tensor
 
 
+def load_sparse_tensor_proto(path: Path) -> onnx.SparseTensorProto:
+    """Load one SparseTensorProto from disk."""
+    tensor = onnx.SparseTensorProto()
+    tensor.ParseFromString(path.read_bytes())
+    return tensor
+
+
 def load_tensor_proto_array(path: Path) -> np.ndarray:
     """Load a TensorProto from disk and convert it to a numpy array."""
     tensor = load_tensor_proto(path)
     return numpy_helper.to_array(tensor)
+
+
+def sparse_tensor_from_proto(path: Path) -> ort.SparseTensor:
+    """Load a SparseTensorProto from disk and create an ORT SparseTensor on CPU."""
+    tensor = load_sparse_tensor_proto(path)
+    dense_shape = np.asarray(tensor.dims, dtype=np.int64)
+    values = numpy_helper.to_array(tensor.values)
+    indices = numpy_helper.to_array(tensor.indices)
+    cpu_device = ort.OrtDevice.make("cpu", 0)
+    if indices.ndim == 1:
+        return ort.SparseTensor.sparse_coo_from_numpy(dense_shape, values, indices, cpu_device)
+    if indices.ndim == 2:
+        return ort.SparseTensor.sparse_coo_from_numpy(
+            dense_shape,
+            values,
+            np.ascontiguousarray(indices.reshape(-1)),
+            cpu_device,
+        )
+    raise ValueError(f"Unsupported sparse indices rank {indices.ndim} in {path}")
 
 
 def load_validation_metadata(test_case_dir: Path) -> TestCaseValidation:
@@ -188,6 +214,11 @@ def requires_ort_value_feed(input_proto: onnx.TensorProto) -> bool:
     return array.dtype.name in {"int4", "uint4"}
 
 
+def is_sparse_input_type(input_type: str) -> bool:
+    """Return whether a session input is declared as a sparse tensor."""
+    return input_type.startswith("sparse_tensor(")
+
+
 def matches_expected_failure(error: Exception, validation: TestCaseValidation) -> bool:
     """Return whether a runtime exception matches the captured expected failure."""
     if not validation.expects_failure:
@@ -251,14 +282,34 @@ def validate_dataset_result(
     if test_case_validation.expects_failure:
         return "OK"
 
-    input_protos = [load_tensor_proto(input_path) for input_path in input_paths]
-    use_ort_values = any(requires_ort_value_feed(input_proto) for input_proto in input_protos)
+    use_ort_values = False
+    input_tensors: list[onnx.TensorProto] = []
+    sparse_inputs: list[ort.SparseTensor | None] = []
+    for input_info, input_path in zip(session_inputs, input_paths, strict=True):
+        if is_sparse_input_type(input_info.type):
+            use_ort_values = True
+            input_tensors.append(onnx.TensorProto())
+            sparse_inputs.append(sparse_tensor_from_proto(input_path))
+            continue
+
+        input_proto = load_tensor_proto(input_path)
+        input_tensors.append(input_proto)
+        sparse_inputs.append(None)
+        if requires_ort_value_feed(input_proto):
+            use_ort_values = True
 
     try:
         if use_ort_values:
             feeds: dict[str, ort.OrtValue] = {}
-            for input_info, input_proto in zip(session_inputs, input_protos, strict=True):
-                feeds[input_info.name] = create_input_ort_value(input_proto)
+            for input_info, input_proto, sparse_input in zip(
+                session_inputs, input_tensors, sparse_inputs, strict=True
+            ):
+                if sparse_input is not None:
+                    feeds[input_info.name] = ort.OrtValue.ort_value_from_sparse_tensor(
+                        sparse_input
+                    )
+                else:
+                    feeds[input_info.name] = create_input_ort_value(input_proto)
             computed_outputs = session.run_with_ort_values(
                 [output.name for output in session_outputs],
                 feeds,
@@ -266,7 +317,7 @@ def validate_dataset_result(
             actual_outputs = [np.asarray(output.numpy()) for output in computed_outputs]
         else:
             feeds = {}
-            for input_info, input_proto in zip(session_inputs, input_protos, strict=True):
+            for input_info, input_proto in zip(session_inputs, input_tensors, strict=True):
                 feeds[input_info.name] = numpy_helper.to_array(input_proto)
             computed_outputs = session.run(None, feeds)
             actual_outputs = [np.asarray(output) for output in computed_outputs]
