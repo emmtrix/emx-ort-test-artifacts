@@ -7,8 +7,8 @@ import argparse
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = REPO_ROOT / "tools" / "python"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
@@ -20,7 +20,7 @@ from emx_ort_test_materializer.ignored_artifact_cases import load_ignored_artifa
 
 
 DEFAULT_EXPECTATIONS_PATH = REPO_ROOT / "tests" / "artifact_validation_expected.json"
-DEFAULT_OUTPUT_PATH = REPO_ROOT / "ARTIFACT_VALIDATION_ERRORS.md"
+DEFAULT_OUTPUT_PATH = REPO_ROOT / "artifacts" / "VALIDATION_ERRORS.md"
 DEFAULT_IGNORED_CASES_PATH = REPO_ROOT / "artifact_generation_ignored_cases.json"
 
 

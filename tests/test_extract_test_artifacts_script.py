@@ -1,4 +1,4 @@
-"""Unit tests for the runtime extractor build orchestration script."""
+"""Unit tests for the maintainer runtime extractor orchestration script."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT_PATH = REPO_ROOT / "scripts" / "extract_test_artifacts.py"
+SCRIPT_PATH = REPO_ROOT / "tools" / "scripts" / "extract_test_artifacts.py"
 
 
 def load_script_module():

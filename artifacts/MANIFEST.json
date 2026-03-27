@@ -1,0 +1,16 @@
+{
+  "dataset_name": "ONNX Runtime test artifacts",
+  "artifact_root": "artifacts/onnxruntime",
+  "repository_role": "artifact-first",
+  "tracked_artifacts_are_primary_payload": true,
+  "source_repository": "https://github.com/microsoft/onnxruntime",
+  "pinned_onnxruntime_version": "1.24.4",
+  "validation_expectations_path": "tests/artifact_validation_expected.json",
+  "validation_report_path": "artifacts/VALIDATION_ERRORS.md",
+  "ignored_generation_cases_path": "artifact_generation_ignored_cases.json",
+  "maintainer_tooling": {
+    "scripts_root": "tools/scripts",
+    "python_helpers_root": "tools/python",
+    "cpp_helpers_root": "tools/cpp"
+  }
+}

@@ -1,5 +1,4 @@
-# Runtime dependencies for emx-ort-test-materializer
-# Add packages here as the extraction logic is implemented.
+# Maintainer dependencies for refreshing and validating the tracked artifact dataset.
 
 onnx
 onnxruntime==1.24.4

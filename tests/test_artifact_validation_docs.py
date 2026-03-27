@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_ROOT = REPO_ROOT / "src"
+SRC_ROOT = REPO_ROOT / "tools" / "python"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
@@ -23,7 +23,7 @@ from emx_ort_test_materializer.ignored_artifact_cases import (
 
 
 EXPECTATIONS_PATH = REPO_ROOT / "tests" / "artifact_validation_expected.json"
-OVERVIEW_PATH = REPO_ROOT / "ARTIFACT_VALIDATION_ERRORS.md"
+OVERVIEW_PATH = REPO_ROOT / "artifacts" / "VALIDATION_ERRORS.md"
 IGNORED_CASES_PATH = REPO_ROOT / "artifact_generation_ignored_cases.json"
 
 
@@ -42,13 +42,13 @@ def test_artifact_validation_error_doc() -> None:
 
     if not OVERVIEW_PATH.exists():
         pytest.fail(
-            "ARTIFACT_VALIDATION_ERRORS.md is missing. "
+            "artifacts/VALIDATION_ERRORS.md is missing. "
             f"Regenerate with: {DOCS_REGEN_COMMAND}"
         )
 
     actual_markdown = OVERVIEW_PATH.read_text(encoding="utf-8")
     assert actual_markdown == expected_markdown, (
-        "ARTIFACT_VALIDATION_ERRORS.md is stale. "
+        "artifacts/VALIDATION_ERRORS.md is stale. "
         f"Regenerate with: {DOCS_REGEN_COMMAND}"
     )
 

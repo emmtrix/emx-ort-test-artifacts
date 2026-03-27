@@ -1,9 +1,9 @@
-name: Regenerate Artifacts
+name: Refresh Artifact Dataset
 
 on:
   push:
     branches:
-      - main	# Main is only used to fill the ccache
+      - main
   pull_request:
     types:
       - opened
@@ -17,12 +17,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: regenerate-artifacts-${{ github.event.pull_request.number || github.ref_name }}
+  group: refresh-artifact-dataset-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
-  regenerate:
-#    runs-on: ubuntu-22.04
+  refresh:
     runs-on: blacksmith-16vcpu-ubuntu-2204
     env:
       CHECKOUT_REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
@@ -30,10 +29,8 @@ jobs:
       PUSH_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
       CACHE_DELETE_REF: ${{ github.event_name == 'pull_request' && format('refs/pull/{0}/merge', github.event.pull_request.number) || format('refs/heads/{0}', github.ref_name) }}
       WARM_CCACHE_ONLY: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
-      # Route compiler invocations through ccache during CMake builds.
       CMAKE_C_COMPILER_LAUNCHER: ccache
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
-      # Persist the compiler cache inside the workspace so actions/cache can store it.
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_MAXSIZE: 2G
 
@@ -55,7 +52,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ninja-build ccache
 
-      # Restore the shared compiler cache before configuring or building the extractor.
       - name: Restore ccache objects
         id: ccache-restore
         uses: actions/cache/restore@v5
@@ -65,29 +61,26 @@ jobs:
           restore-keys: |
             ccache
 
-      # Print cache contents from the restored archive before zeroing per-run counters.
       - name: Reset ccache statistics
         run: |
           ccache -s
           ccache -z
 
-      - name: Install Python dependencies
+      - name: Install maintainer dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Regenerate artifacts
+      - name: Refresh tracked artifacts
         run: |
           rm -rf artifacts/onnxruntime
           mkdir -p artifacts
-          python scripts/extract_test_artifacts.py --artifacts-output artifacts --rebuild
+          python tools/scripts/extract_test_artifacts.py --artifacts-output artifacts --rebuild
 
-      # Show hit/miss counters after the regeneration build finished.
       - name: Show ccache statistics
         if: always()
         run: ccache -s
 
-      # Save the warmed cache even when later steps fail.
       - name: Save ccache objects
         if: always()
         uses: actions/cache/save@v4
@@ -95,29 +88,29 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ github.run_id }}
 
-      - name: Update validation expectations
+      - name: Refresh validation expectations
         if: env.WARM_CCACHE_ONLY != 'true'
-        run: python scripts/update_artifact_validation_expectations.py
+        run: python tools/scripts/update_artifact_validation_expectations.py
 
-      - name: Update validation overview
+      - name: Refresh validation report
         if: env.WARM_CCACHE_ONLY != 'true'
-        run: python scripts/generate_artifact_validation_overview.py
+        run: python tools/scripts/generate_artifact_validation_overview.py
 
       - name: Run pytest
         if: env.WARM_CCACHE_ONLY != 'true'
         run: pytest -q
 
-      - name: Commit and push generated changes
+      - name: Commit and push generated dataset updates
         if: env.WARM_CCACHE_ONLY != 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A artifacts tests/artifact_validation_expected.json ARTIFACT_VALIDATION_ERRORS.md
+          git add -A artifacts tests/artifact_validation_expected.json
           if git diff --cached --quiet; then
             echo "No generated changes to commit."
             exit 0
           fi
-          git commit -m "chore: regenerate ORT artifacts"
+          git commit -m "chore: refresh ORT artifact dataset"
           git push origin HEAD:${PUSH_REF}
 
       - name: Skip auto-push for fork pull requests

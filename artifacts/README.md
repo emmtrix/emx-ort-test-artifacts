@@ -1,97 +1,121 @@
-# artifacts/
+# Artifacts
 
-This directory stores the ONNX and TensorProto `.pb` artifacts that are
-materialized from the ONNX Runtime test suite — covering **both Python and
-C++ tests** — by the extraction scripts in this repository.
+This directory is the primary payload of the repository.
 
-All files in this directory are **committed to version control** so that
-downstream consumers can reference them without requiring a full ONNX Runtime
-build or Python environment.
+It stores checked-in ONNX models, TensorProto `.pb` files, and validation
+metadata derived from ONNX Runtime tests. Consumers should start here, not in
+the maintenance tooling under `tools/`.
 
----
+## Contents
+
+- `onnxruntime/`: tracked artifact dataset mirroring ONNX Runtime test sources.
+- `MANIFEST.json`: dataset-level metadata, including the pinned source version.
+- `VALIDATION_ERRORS.md`: generated summary of non-OK validation outcomes and ignored cases.
+
+All files in this directory are committed so downstream tooling can consume
+them without rebuilding ONNX Runtime locally.
 
 ## Layout
 
-Artifacts mirror the path structure of the ONNX Runtime source tree:
-
-```
+```text
 artifacts/
   onnxruntime/
     test/
       python/
         contrib_ops/
-          <test_file>/         # name of the .py test file (without extension)
-            <test_case>/       # name of the individual test case / sub-test
-              model.onnx       # serialized ONNX ModelProto
-              test_data_set_0/ # first set of inputs/outputs
-                input_0.pb     # first input tensor (TensorProto binary)
-                input_1.pb     # second input tensor (if present)
-                output_0.pb    # expected output tensor (if captured)
+          <test_file>/
+            <test_case>/
+              model.onnx
+              validation.json
+              test_data_set_0/
+                input_0.pb
+                input_1.pb
+                output_0.pb
+      contrib_ops/
+        <test_file>/
+          <test_name>_run<n>/
+            model.onnx
+            validation.json
+            test_data_set_0/
+              input_0.pb
+              output_0.pb
       testdata/
-        <op_or_suite_name>/    # mirrors onnxruntime/test/testdata/<name>/
-          model.onnx
-          test_data_set_0/
-            input_0.pb
-            output_0.pb
+        <name>/
+          ...
       providers/
-        <provider_test_name>/  # mirrors onnxruntime/test/providers/<name>/
-          model.onnx
-          test_data_set_0/
-            input_0.pb
-            output_0.pb
+        <name>/
+          ...
 ```
 
-### Source-to-Artifact Mapping
+## Source-to-Artifact Mapping
 
-| ORT source path                                   | Artifact sub-path                              | Extraction method          |
-|---------------------------------------------------|------------------------------------------------|----------------------------|
-| `onnxruntime/test/python/contrib_ops/<file>.py`   | `test/python/contrib_ops/<file>/<test_case>/`  | Python instrumentation     |
-| `onnxruntime/test/python/<file>.py`               | `test/python/<file>/<test_case>/`              | Python instrumentation     |
-| `onnxruntime/test/contrib_ops/<file>.cc`          | `test/contrib_ops/<file>/<test_name>_run<n>/`  | Runtime `OpTester` wrapper |
-| `onnxruntime/test/testdata/<name>/`               | `test/testdata/<name>/`                        | Static copy from ORT checkout |
-| `onnxruntime/test/providers/<name>/`              | `test/providers/<name>/`                       | Static copy from ORT checkout |
-
-### Naming Rules
-
-| Segment              | Derivation                                                       |
-|----------------------|------------------------------------------------------------------|
-| `<test_file>`        | Python test module name, e.g. `test_conv`                       |
-| `<test_case>`        | Python test method or parametrize ID, e.g. `test_conv_basic`    |
-| `<test_name>_run<n>` | C++ gtest name plus zero-based `Run()` index, e.g. `Foo_run0`   |
-| `input_<i>.pb`       | Inputs in the order passed to `InferenceSession.run()`          |
-| `output_<i>.pb`      | Outputs in capture order; for C++ runtime mode these are the expected `OpTester` outputs |
-| `test_data_set_<n>/` | Indexed from `0`; currently `test_data_set_0` per extracted run |
-
----
+| ORT source path | Artifact sub-path | Extraction method |
+| --- | --- | --- |
+| `onnxruntime/test/python/contrib_ops/<file>.py` | `onnxruntime/test/python/contrib_ops/<file>/<test_case>/` | Python runtime instrumentation |
+| `onnxruntime/test/python/<file>.py` | `onnxruntime/test/python/<file>/<test_case>/` | Python runtime instrumentation |
+| `onnxruntime/test/contrib_ops/<file>.cc` | `onnxruntime/test/contrib_ops/<file>/<test_name>_run<n>/` | Runtime `OpTester` wrapper |
+| `onnxruntime/test/testdata/<name>/` | `onnxruntime/test/testdata/<name>/` | Static copy from ORT checkout |
+| `onnxruntime/test/providers/<name>/` | `onnxruntime/test/providers/<name>/` | Static copy from ORT checkout |
 
 ## File Formats
 
-- **`model.onnx`** – binary serialization of an ONNX `ModelProto`.
-  Can be loaded with `onnx.load("model.onnx")` or
-  `onnxruntime.InferenceSession("model.onnx")`.
-- **`*.pb`** – binary serialization of an ONNX `TensorProto` for dense tensors,
-  or `SparseTensorProto` for sparse inputs.
-  Dense tensors can be loaded with:
-  ```python
-  import onnx
-  tensor = onnx.TensorProto()
-  with open("input_0.pb", "rb") as f:
-      tensor.ParseFromString(f.read())
-  array = onnx.numpy_helper.to_array(tensor)
-  ```
-  Sparse tensors can be loaded with:
-  ```python
-  import onnx
-  sparse = onnx.SparseTensorProto()
-  with open("input_0.pb", "rb") as f:
-      sparse.ParseFromString(f.read())
-  ```
+- `model.onnx`: binary ONNX `ModelProto`.
+- `input_*.pb` and `output_*.pb`: binary `TensorProto` for dense tensors, or
+  `SparseTensorProto` for sparse inputs.
+- `validation.json`: replay metadata captured from the originating ORT test.
+  In the current checked-in dataset, every test-case directory has this file.
+  The Python validation code still tolerates a missing file as a compatibility
+  fallback and then uses empty/default metadata.
 
----
+## `validation.json`
 
-## Status
+`validation.json` describes how a checked-in test case should be interpreted
+during validation. The current schema is:
 
-The runtime C++ extractor can already generate concrete artifacts for
-`OpTester`-based contrib-op tests. The Python-side extraction pipeline and the
-static mirroring of existing ORT `testdata/` and `providers/` assets remain
-future work.
+```json
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "included_providers": ["CPU"],
+  "excluded_providers": ["CUDA"],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}
+```
+
+Field meanings:
+
+- `expects_failure`: marks a case captured from an ORT test that expected
+  failure. The current validator treats such a case as valid without replaying
+  output comparisons once the artifact structure is otherwise loadable.
+- `expected_failure_substring`: optional substring that must appear in the
+  runtime error when `expects_failure` is true and an exception is actually
+  observed during model load or execution.
+- `included_providers`: optional normalized provider names explicitly used by
+  the originating ORT test. These are currently informational only; the Python
+  validator always replays with `CPUExecutionProvider`.
+- `excluded_providers`: optional normalized provider names explicitly excluded
+  by the originating ORT test. These are currently informational only.
+- `outputs`: list of per-output comparison rules. Each entry is identified by
+  its `name` field and matched against the model output name during validation.
+- `outputs[].relative_error`: optional relative tolerance override.
+- `outputs[].absolute_error`: optional absolute tolerance override.
+- `outputs[].sort_output`: whether validation should compare this output after
+  flattening and sorting it.
+
+If both provider lists are absent, the original ORT test used its default
+provider selection. The runtime extractor currently writes `expects_failure`,
+`expected_failure_substring`, and `outputs` for every generated case, and only
+emits the provider lists when they are non-empty.
+
+## Maintainer Context
+
+The artifact refresh and validation commands live in `tools/scripts/` and are
+documented in [`../DEVELOPMENT.md`](../DEVELOPMENT.md). Those scripts are
+repository maintenance infrastructure, not the main product.

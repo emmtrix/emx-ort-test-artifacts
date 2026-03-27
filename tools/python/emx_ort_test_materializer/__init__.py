@@ -1,11 +1,11 @@
 """
 emx_ort_test_materializer
 --------------------------
-Lightweight internal utility for materializing ONNX and TensorProto ``.pb``
-artifacts from ONNX Runtime tests — covering **both Python and C++ test suites**.
+Maintainer-side helper modules for refreshing and validating the checked-in
+ONNX Runtime artifact dataset stored under ``artifacts/``.
 
-This package is **not** intended for distribution.  It is a collection of
-helper modules used by the scripts under ``scripts/``.
+This package is **not** intended for distribution. It exists only to support
+the maintenance scripts under ``tools/scripts/``.
 
 Modules
 ~~~~~~~

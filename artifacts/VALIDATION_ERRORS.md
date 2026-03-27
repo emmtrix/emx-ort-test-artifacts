@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED FILE. DO NOT EDIT. -->
-<!-- Regenerate with: UPDATE_REFS=1 pytest -q tests/test_artifact_validation_docs.py::test_artifact_validation_error_doc -->
+<!-- Regenerate with: python tools/scripts/generate_artifact_validation_overview.py -->
 
 # ORT artifact validation errors
 
@@ -7,7 +7,7 @@ Aggregates non-OK artifact validation outcomes.
 
 Expectation source: `tests/artifact_validation_expected.json`
 
-Validated cases: 4182 / 4182 OK, 0 non-OK.
+Validated cases: 4184 / 4184 OK, 0 non-OK.
 
 Ignored artifact generation cases: 5.
 

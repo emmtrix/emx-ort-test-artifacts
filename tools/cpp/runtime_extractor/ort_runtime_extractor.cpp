@@ -39,7 +39,7 @@
 #include "core/session/onnxruntime_cxx_api.h"
 #include "gtest/gtest.h"
 
-#include "cpp/runtime_extractor/ort_runtime_capture.h"
+#include "tools/cpp/runtime_extractor/ort_runtime_capture.h"
 
 #ifndef EMX_ORT_CAPTURE_TEST_SOURCE
 #error "EMX_ORT_CAPTURE_TEST_SOURCE must be defined for the runtime extractor target."
@@ -50,7 +50,7 @@
 #endif
 
 #ifndef EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER
-#define EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER "cpp/runtime_extractor/ort_runtime_capture_extra_includes_default.h"
+#define EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER "tools/cpp/runtime_extractor/ort_runtime_capture_extra_includes_default.h"
 #endif
 
 #include EMX_ORT_CAPTURE_EXTRA_INCLUDES_HEADER

@@ -12,7 +12,7 @@ from emx_ort_test_materializer.ignored_artifact_cases import (
 )
 
 DOCS_REGEN_COMMAND = (
-    "UPDATE_REFS=1 pytest -q tests/test_artifact_validation_docs.py::test_artifact_validation_error_doc"
+    "python tools/scripts/generate_artifact_validation_overview.py"
 )
 
 

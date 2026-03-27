@@ -20,7 +20,7 @@ set(onnxruntime_USE_XNNPACK OFF CACHE BOOL "" FORCE)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "" FORCE)
 
-set(EMX_ORT_REPO_ROOT "${CMAKE_CURRENT_LIST_DIR}/../..")
+set(EMX_ORT_REPO_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../..")
 get_filename_component(EMX_ORT_REPO_ROOT "${EMX_ORT_REPO_ROOT}" ABSOLUTE)
 if(NOT DEFINED EMX_ORT_SOURCE_ROOT)
   message(FATAL_ERROR "EMX_ORT_SOURCE_ROOT must point to a local ONNX Runtime source checkout.")
@@ -95,8 +95,8 @@ endfunction()
 function(emx_add_runtime_extractor_target target_name source_file source_file_rel source_root_rel extra_includes_header)
   add_executable(
     "${target_name}"
-    "${EMX_ORT_REPO_ROOT}/cpp/runtime_extractor/ort_runtime_capture.cpp"
-    "${EMX_ORT_REPO_ROOT}/cpp/runtime_extractor/ort_runtime_extractor.cpp"
+    "${EMX_ORT_REPO_ROOT}/tools/cpp/runtime_extractor/ort_runtime_capture.cpp"
+    "${EMX_ORT_REPO_ROOT}/tools/cpp/runtime_extractor/ort_runtime_extractor.cpp"
   )
 
   target_compile_definitions(

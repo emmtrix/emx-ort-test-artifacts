@@ -1,7 +1,7 @@
 // Runtime capture helpers for executing ORT OpTester-based unit tests and
 // exporting reusable JSON metadata plus ONNX/TensorProto artifacts.
 
-#include "cpp/runtime_extractor/ort_runtime_capture.h"
+#include "tools/cpp/runtime_extractor/ort_runtime_capture.h"
 
 #include <algorithm>
 #include <cstddef>
