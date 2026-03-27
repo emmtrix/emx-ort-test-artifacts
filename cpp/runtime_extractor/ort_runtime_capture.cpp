@@ -23,6 +23,7 @@
 #include <google/protobuf/message_lite.h>
 #include "gtest/gtest.h"
 
+#include "core/framework/sparse_tensor.h"
 #include "core/framework/tensorprotoutils.h"
 
 namespace fs = std::filesystem;
@@ -294,6 +295,67 @@ void WriteBinaryProtoToFile(const google::protobuf::MessageLite& proto, const fs
   ORT_ENFORCE(proto.SerializeToOstream(&output), "Failed to serialize proto to file: ", output_path.string());
 }
 
+ONNX_NAMESPACE::SparseTensorProto SparseTensorToProto(
+    const onnxruntime::SparseTensor& sparse_tensor,
+    std::string_view name) {
+  ONNX_NAMESPACE::SparseTensorProto sparse_proto;
+  auto* values_proto = sparse_proto.mutable_values();
+  *values_proto = onnxruntime::utils::TensorToTensorProto(sparse_tensor.Values(), std::string(name));
+
+  for (const auto dim : sparse_tensor.DenseShape().GetDims()) {
+    sparse_proto.add_dims(dim);
+  }
+
+  auto* indices_proto = sparse_proto.mutable_indices();
+  switch (sparse_tensor.Format()) {
+    case onnxruntime::SparseFormat::kCoo: {
+      *indices_proto = onnxruntime::utils::TensorToTensorProto(
+          sparse_tensor.AsCoo().Indices(),
+          std::string(name) + "_indices");
+      break;
+    }
+    case onnxruntime::SparseFormat::kCsrc: {
+      const auto& values = sparse_tensor.Values();
+      const auto& inner = sparse_tensor.AsCsr().Inner();
+      const auto& outer = sparse_tensor.AsCsr().Outer();
+      const auto nnz = values.Shape().Size();
+      const auto dense_dims = sparse_tensor.DenseShape().GetDims();
+
+      ORT_ENFORCE(dense_dims.size() == 2U, "CSR sparse tensor must have rank 2. Got rank: ", dense_dims.size());
+      ORT_ENFORCE(inner.Shape().Size() == nnz, "CSR inner indices must match nnz.");
+
+      std::vector<int64_t> coo_indices;
+      coo_indices.reserve(static_cast<size_t>(nnz) * 2U);
+
+      const auto* inner_data = inner.Data<int64_t>();
+      const auto* outer_data = outer.Data<int64_t>();
+
+      for (int64_t row = 0, rows = dense_dims[0]; row < rows; ++row) {
+        const int64_t start = outer_data[row];
+        const int64_t end = outer_data[row + 1];
+        for (int64_t offset = start; offset < end; ++offset) {
+          coo_indices.push_back(row);
+          coo_indices.push_back(inner_data[offset]);
+        }
+      }
+
+      indices_proto->set_name(std::string(name) + "_indices");
+      indices_proto->set_data_type(ONNX_NAMESPACE::TensorProto_DataType_INT64);
+      indices_proto->add_dims(nnz);
+      indices_proto->add_dims(2);
+      onnxruntime::utils::SetRawDataInTensorProto(
+          *indices_proto,
+          reinterpret_cast<const char*>(coo_indices.data()),
+          coo_indices.size() * sizeof(int64_t));
+      break;
+    }
+    default:
+      ORT_THROW("Unsupported sparse tensor format for artifact serialization.");
+  }
+
+  return sparse_proto;
+}
+
 void WriteValidationMetadataToFile(const CapturedRecord& record, const fs::path& output_path) {
   if (output_path.has_parent_path()) {
     fs::create_directories(output_path.parent_path());
@@ -452,7 +514,20 @@ void WriteArtifacts(CapturingOpTester& tester, CapturedRecord& record) {
     }
 
     if (!input.data.IsTensor()) {
-      record.warnings.push_back("Skipping non-tensor input artifact for " + input.def.Name());
+      if (!input.data.IsSparseTensor()) {
+        record.warnings.push_back("Skipping non-tensor input artifact for " + input.def.Name());
+        continue;
+      }
+
+      const fs::path input_path = dataset_dir / ("input_" + std::to_string(input_index++) + ".pb");
+      try {
+        const auto& sparse_tensor = input.data.Get<onnxruntime::SparseTensor>();
+        auto sparse_proto = SparseTensorToProto(sparse_tensor, input.def.Name());
+        WriteBinaryProtoToFile(sparse_proto, input_path);
+        record.input_files.push_back(fs::relative(input_path, artifact_root).generic_string());
+      } catch (const std::exception& exception) {
+        record.warnings.push_back("Failed to serialize sparse input artifact for " + input.def.Name() + ": " + exception.what());
+      }
       continue;
     }
 

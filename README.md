@@ -147,7 +147,8 @@ Current behavior:
 - Scans only `OpTester`-based C++ sources in directory mode.
 - Redirects `OpTester` usage through a capturing subclass.
 - Writes `model.onnx`, `test_data_set_0/input_*.pb`, and `test_data_set_0/output_*.pb`
-  under `artifacts/` by default.
+  under `artifacts/` by default. Dense inputs/outputs use `TensorProto`; sparse
+  inputs use `SparseTensorProto`.
 - Serializes the same captured tensors as base64-encoded raw bytes in JSON.
 
 Artifact directories use the ORT-relative source path and the per-run suffix

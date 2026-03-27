@@ -69,14 +69,22 @@ artifacts/
 - **`model.onnx`** – binary serialization of an ONNX `ModelProto`.
   Can be loaded with `onnx.load("model.onnx")` or
   `onnxruntime.InferenceSession("model.onnx")`.
-- **`*.pb`** – binary serialization of an ONNX `TensorProto`.
-  Can be loaded with:
+- **`*.pb`** – binary serialization of an ONNX `TensorProto` for dense tensors,
+  or `SparseTensorProto` for sparse inputs.
+  Dense tensors can be loaded with:
   ```python
   import onnx
   tensor = onnx.TensorProto()
   with open("input_0.pb", "rb") as f:
       tensor.ParseFromString(f.read())
   array = onnx.numpy_helper.to_array(tensor)
+  ```
+  Sparse tensors can be loaded with:
+  ```python
+  import onnx
+  sparse = onnx.SparseTensorProto()
+  with open("input_0.pb", "rb") as f:
+      sparse.ParseFromString(f.read())
   ```
 
 ---

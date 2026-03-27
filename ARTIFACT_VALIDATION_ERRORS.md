@@ -7,11 +7,10 @@ Aggregates non-OK artifact validation outcomes.
 
 Expectation source: `tests/artifact_validation_expected.json`
 
-Validated cases: 4174 / 4187 OK, 13 non-OK.
+Validated cases: 4184 / 4189 OK, 5 non-OK.
 
 | Error message | Count | Sources |
 | --- | --- | --- |
-| Input count mismatch | 8 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test |
 | ONNX Runtime error | 5 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test |
 
 ## Error frequency by source
@@ -19,7 +18,6 @@ Validated cases: 4174 / 4187 OK, 13 non-OK.
 | Error message | Source | Count |
 | --- | --- | --- |
 | ONNX Runtime error | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | 5 |
-| Input count mismatch | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | 8 |
 
 ## Failing artifact cases
 
@@ -32,11 +30,3 @@ Lists every artifact case with a non-OK expected validation result.
 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test/LayerNorm_Scale_Bias_Float16ScaleBiasOutput_run0 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | [ONNXRuntimeError] : 1 : FAIL : Node () Op (Flatten) [ShapeInferenceError] Invalid value(-1) for attribute 'axis' |
 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test/LayerNorm_Scale_Float16Input_run0 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | [ONNXRuntimeError] : 1 : FAIL : Node () Op (Flatten) [ShapeInferenceError] Invalid value(-1) for attribute 'axis' |
 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test/LayerNorm_Scale_Float16ScaleOutput_run0 | artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test | [ONNXRuntimeError] : 1 : FAIL : Node () Op (Flatten) [ShapeInferenceError] Invalid value(-1) for attribute 'axis' |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run0 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run1 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run2 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCoo_run3 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run0 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run1 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run2 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
-| artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test/TestCsr_run3 | artifacts/onnxruntime/test/contrib_ops/math/matmul_sparse_test | test_data_set_0: input count mismatch: files=1, model_inputs=2 |
