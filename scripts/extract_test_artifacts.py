@@ -32,11 +32,16 @@ from emx_ort_test_materializer.ignored_artifact_cases import (
     ignored_case_reasons_by_path,
     load_ignored_artifact_cases,
 )
+from emx_ort_test_materializer.onnxruntime_source import (
+    default_onnxruntime_checkout_dir,
+    ensure_onnxruntime_checkout,
+)
 
 DEFAULT_ORT_TEST_RANDOM_SEED = "1337"
 DEFAULT_MAX_PARALLEL_JOBS = 8
 MINIMUM_CMAKE_VERSION = (3, 28, 0)
 DEFAULT_IGNORED_CASES_PATH = REPO_ROOT / "artifact_generation_ignored_cases.json"
+DEFAULT_REQUIREMENTS_PATH = REPO_ROOT / "requirements.txt"
 
 
 @dataclass(frozen=True)
@@ -87,15 +92,33 @@ def detect_cmake_binary() -> Path:
     )
 
 
-def ort_test_root() -> Path:
+def ort_test_root(ort_repo_root: Path) -> Path:
     """Return the ONNX Runtime test root used as working directory for wrapped gtests."""
-    return repo_root() / "onnxruntime-org" / "onnxruntime" / "test"
+    return ort_repo_root / "onnxruntime" / "test"
 
 
-def relative_to_onnxruntime_org(path: Path) -> Path:
-    """Return a path relative to the immutable onnxruntime-org checkout."""
-    ort_root = repo_root() / "onnxruntime-org"
-    return path.resolve().relative_to(ort_root.resolve())
+def relative_to_onnxruntime_repo(path: Path, ort_repo_root: Path) -> Path:
+    """Return a path relative to the prepared ONNX Runtime checkout."""
+    return path.resolve().relative_to(ort_repo_root.resolve())
+
+
+def resolve_cpp_source_path(source_path: Path, ort_repo_root: Path) -> Path:
+    """Resolve a CLI-provided C++ source path against the prepared ORT checkout."""
+    if source_path.is_absolute():
+        return source_path.resolve()
+
+    if source_path.parts and source_path.parts[0] == "onnxruntime-org":
+        source_path = Path(*source_path.parts[1:])
+
+    ort_candidate = (ort_repo_root / source_path).resolve()
+    if ort_candidate.exists():
+        return ort_candidate
+
+    repo_candidate = (repo_root() / source_path).resolve()
+    if repo_candidate.exists():
+        return repo_candidate
+
+    return ort_candidate
 
 
 def is_runtime_candidate(source_file: Path) -> bool:
@@ -184,7 +207,11 @@ def run_logged_command(command: list[str], **kwargs: object) -> subprocess.Compl
     return subprocess.run(command, **kwargs)
 
 
-def configure_runtime_extractor(cmake_binary: Path, build_dir: Path) -> None:
+def configure_runtime_extractor(
+    cmake_binary: Path,
+    build_dir: Path,
+    ort_repo_root: Path,
+) -> None:
     """Configure the runtime extractor build once for the current workspace."""
     command = [
         str(cmake_binary),
@@ -192,6 +219,7 @@ def configure_runtime_extractor(cmake_binary: Path, build_dir: Path) -> None:
         str(repo_root() / "cpp" / "runtime_extractor"),
         "-B",
         str(build_dir),
+        f"-DEMX_ORT_SOURCE_ROOT={ort_repo_root.resolve().as_posix()}",
     ]
     if os.name == "nt":
         command.extend(
@@ -209,9 +237,9 @@ def configure_runtime_extractor(cmake_binary: Path, build_dir: Path) -> None:
     run_logged_command(command, check=True)
 
 
-def helper_source_files(source_file: Path) -> list[Path]:
+def helper_source_files(source_file: Path, ort_repo_root: Path) -> list[Path]:
     """Return helper implementation files that should be included for one test source."""
-    ort_source_root = repo_root() / "onnxruntime-org" / "onnxruntime"
+    ort_source_root = ort_repo_root / "onnxruntime"
     include_pattern = re.compile(r'#include\s+"([^"]+)"')
     source_text = source_file.read_text(encoding="utf-8", errors="ignore")
     helper_sources: list[Path] = []
@@ -248,6 +276,7 @@ def write_runtime_extra_includes_header(
 def write_runtime_target_manifest(
     build_dir: Path,
     source_files: list[Path],
+    ort_repo_root: Path,
     source_root_relative: Path,
 ) -> list[RuntimeTargetSpec]:
     """Write the generated CMake target manifest for all selected runtime sources."""
@@ -264,12 +293,12 @@ def write_runtime_target_manifest(
     ]
 
     for index, source_file in enumerate(source_files):
-        source_file_relative = relative_to_onnxruntime_org(source_file)
+        source_file_relative = relative_to_onnxruntime_repo(source_file, ort_repo_root)
         sanitized_name = sanitize_filename(source_file_relative)
         extra_includes_header = include_dir / f"{index:04d}_{sanitized_name}_extra_includes.h"
         write_runtime_extra_includes_header(
             extra_includes_header,
-            helper_source_files(source_file),
+            helper_source_files(source_file, ort_repo_root),
         )
 
         spec = RuntimeTargetSpec(
@@ -368,6 +397,7 @@ def run_runtime_extractor(
     extractor_binary: Path,
     output_path: Path,
     artifacts_output: Path,
+    ort_repo_root: Path,
     gtest_filter: str | None,
 ) -> subprocess.CompletedProcess[bytes]:
     """Execute the runtime extractor for one compiled C++ test source file."""
@@ -391,7 +421,7 @@ def run_runtime_extractor(
     return run_logged_command(
         command,
         check=False,
-        cwd=ort_test_root(),
+        cwd=ort_test_root(ort_repo_root),
         capture_output=True,
         env=runtime_env,
     )
@@ -438,6 +468,7 @@ def execute_runtime_target(
     spec: RuntimeTargetSpec,
     extractor_binary: Path,
     artifacts_output: Path,
+    ort_repo_root: Path,
     gtest_filter: str | None,
 ) -> tuple[int, dict | None, dict | None]:
     """Run one extractor binary and return either a runtime JSON chunk or a failure record."""
@@ -446,6 +477,7 @@ def execute_runtime_target(
             extractor_binary,
             spec.output_path,
             artifacts_output,
+            ort_repo_root,
             gtest_filter,
         )
         runtime_stdout = runtime_result.stdout.decode("utf-8", errors="replace")
@@ -487,6 +519,7 @@ def run_runtime_targets(
     target_specs: list[RuntimeTargetSpec],
     extractor_binaries: dict[str, Path],
     artifacts_output: Path,
+    ort_repo_root: Path,
     gtest_filter: str | None,
     jobs: int,
 ) -> tuple[list[dict], list[dict]]:
@@ -504,6 +537,7 @@ def run_runtime_targets(
                 spec,
                 extractor_binaries[spec.target_name],
                 artifacts_output,
+                ort_repo_root,
                 gtest_filter,
             )
             if runtime_chunk is not None:
@@ -524,6 +558,7 @@ def run_runtime_targets(
                     spec,
                     extractor_binaries[spec.target_name],
                     artifacts_output,
+                    ort_repo_root,
                     gtest_filter,
                 )
                 future_by_spec[future] = spec
@@ -595,7 +630,12 @@ def run_runtime_pipeline(
     """Configure, build, execute, and merge runtime extraction output."""
     artifacts_output = artifacts_output.resolve()
     cmake_binary = detect_cmake_binary()
+    ort_repo_root = ensure_onnxruntime_checkout(
+        default_onnxruntime_checkout_dir(repo_root()),
+        DEFAULT_REQUIREMENTS_PATH,
+    )
     build_dir = repo_root() / "build" / "ort_runtime_extractor"
+    source_path = resolve_cpp_source_path(source_path, ort_repo_root)
     source_files = runtime_source_files(source_path)
 
     if not source_files:
@@ -605,17 +645,18 @@ def run_runtime_pipeline(
         shutil.rmtree(build_dir)
 
     if source_path.is_file():
-        source_root_relative = relative_to_onnxruntime_org(source_path.parent)
+        source_root_relative = relative_to_onnxruntime_repo(source_path.parent, ort_repo_root)
     else:
-        source_root_relative = relative_to_onnxruntime_org(source_path)
+        source_root_relative = relative_to_onnxruntime_repo(source_path, ort_repo_root)
 
     target_specs = write_runtime_target_manifest(
         build_dir,
         source_files,
+        ort_repo_root,
         source_root_relative,
     )
 
-    configure_runtime_extractor(cmake_binary, build_dir)
+    configure_runtime_extractor(cmake_binary, build_dir, ort_repo_root)
     extractor_binaries = build_runtime_extractors(
         cmake_binary,
         build_dir,
@@ -626,6 +667,7 @@ def run_runtime_pipeline(
         target_specs,
         extractor_binaries,
         artifacts_output,
+        ort_repo_root,
         gtest_filter,
         jobs,
     )
@@ -664,8 +706,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cpp-source",
         type=Path,
-        default=root / "onnxruntime-org" / "onnxruntime" / "test" / "contrib_ops",
-        help="C++ test file or directory to scan.",
+        default=Path("onnxruntime/test/contrib_ops"),
+        help="C++ test file or directory to scan inside the cloned ONNX Runtime checkout.",
     )
     parser.add_argument(
         "--json-output",

@@ -44,7 +44,6 @@ jobs:
           repository: ${{ env.CHECKOUT_REPOSITORY }}
           ref: ${{ env.CHECKOUT_REF }}
           fetch-depth: 0
-          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v6

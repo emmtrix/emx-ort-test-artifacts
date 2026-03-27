@@ -35,8 +35,8 @@ tests and expanding from there.
 - Generating intermediate JSON extraction metadata is allowed.
 - Runtime extraction JSON should default to `build/` unless the user explicitly
   requests another location.
-- Do **not** move, retarget, update, or otherwise alter the ONNX Runtime
-  submodule.
+- The ONNX Runtime source checkout is ephemeral and must be cloned or updated
+  on demand from the pinned `onnxruntime` version in `requirements.txt`.
 - Python files may contain minimal orchestration logic needed to build or run
   the extractor pipeline.
 - Do **not** add `pyproject.toml` or packaging configuration – this is a
@@ -53,8 +53,9 @@ tests and expanding from there.
 - Keep modules small and focused on a single responsibility.
 - Prefer explicit over implicit; avoid premature abstraction.
 - No third-party dependencies beyond those listed in `requirements.txt`.
-- Do not modify any file under `onnxruntime-org/` (submodule).
-- Do not change the ONNX Runtime submodule path, URL, or pinned commit.
+- Do not modify the checked-out ONNX Runtime sources in place.
+- Derive the ONNX Runtime checkout ref from `requirements.txt`, not from a
+  hard-coded commit or branch.
 
 ---
 
@@ -120,7 +121,7 @@ that test is written in Python or C++.
 ### Step 1 – Python Test Instrumentation
 
 - Identify test files under
-  `onnxruntime-org/onnxruntime/test/python/` (including
+  `onnxruntime/test/python/` (including
   `contrib_ops/`) that create `InferenceSession` objects.
 - Wrap or monkey-patch `onnxruntime.InferenceSession.__init__` and `.run()` to
   intercept model bytes and numpy input/output arrays.
@@ -128,8 +129,7 @@ that test is written in Python or C++.
 ### Step 2 – C++ Test-Data Discovery
 
 - Scan the ORT source tree for `.onnx` and `.pb` files under paths such as
-  `onnxruntime-org/onnxruntime/test/testdata/` and
-  `onnxruntime-org/onnxruntime/test/providers/`.
+  `onnxruntime/test/testdata/` and `onnxruntime/test/providers/`.
 - Copy (or hard-link) discovered files into `artifacts/` under the mirrored
   path without compiling or executing any C++ code.
 
