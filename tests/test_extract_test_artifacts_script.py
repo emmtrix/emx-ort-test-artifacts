@@ -72,3 +72,22 @@ def test_parse_version_tuple_reads_cmake_versions() -> None:
     module = load_script_module()
     assert module.parse_version_tuple("cmake version 3.28.3") == (3, 28, 3)
     assert module.parse_version_tuple("invalid") is None
+
+
+def test_prepare_artifacts_output_root_removes_previous_onnxruntime_tree(tmp_path: Path) -> None:
+    """Clear stale ONNX Runtime artifacts while preserving root-level files like artifacts/README.md."""
+    module = load_script_module()
+    readme_file = tmp_path / "README.md"
+    readme_file.write_text("artifact docs", encoding="utf-8")
+    stale_file = tmp_path / "onnxruntime" / "test" / "stale.txt"
+    stale_file.parent.mkdir(parents=True)
+    stale_file.write_text("stale", encoding="utf-8")
+    keep_file = tmp_path / "keep.txt"
+    keep_file.write_text("keep", encoding="utf-8")
+
+    module.prepare_artifacts_output_root(tmp_path)
+
+    assert tmp_path.is_dir()
+    assert not (tmp_path / "onnxruntime").exists()
+    assert readme_file.read_text(encoding="utf-8") == "artifact docs"
+    assert keep_file.read_text(encoding="utf-8") == "keep"

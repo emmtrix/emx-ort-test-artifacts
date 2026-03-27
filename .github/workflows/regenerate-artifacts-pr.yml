@@ -79,8 +79,6 @@ jobs:
 
       - name: Regenerate artifacts
         run: |
-          rm -rf artifacts/onnxruntime
-          mkdir -p artifacts
           python scripts/extract_test_artifacts.py --artifacts-output artifacts --rebuild
 
       # Show hit/miss counters after the regeneration build finished.

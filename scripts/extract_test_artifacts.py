@@ -172,6 +172,15 @@ def run_logged_command(command: list[str], **kwargs: object) -> subprocess.Compl
     return subprocess.run(command, **kwargs)
 
 
+def prepare_artifacts_output_root(artifacts_output: Path) -> None:
+    """Clear only the mirrored ONNX Runtime subtree and preserve root-level docs."""
+    artifacts_output.mkdir(parents=True, exist_ok=True)
+    onnxruntime_artifact_root = artifacts_output / "onnxruntime"
+    if onnxruntime_artifact_root.exists():
+        print(f"Removing stale artifacts under {onnxruntime_artifact_root}", flush=True)
+        shutil.rmtree(onnxruntime_artifact_root)
+
+
 def configure_runtime_extractor(cmake_binary: Path, build_dir: Path) -> None:
     """Configure the runtime extractor build once for the current workspace."""
     command = [
@@ -541,6 +550,7 @@ def run_runtime_pipeline(
 ) -> None:
     """Configure, build, execute, and merge runtime extraction output."""
     artifacts_output = artifacts_output.resolve()
+    prepare_artifacts_output_root(artifacts_output)
     cmake_binary = detect_cmake_binary()
     build_dir = repo_root() / "build" / "ort_runtime_extractor"
     source_files = runtime_source_files(source_path)
