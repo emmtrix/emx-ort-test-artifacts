@@ -7,19 +7,17 @@ Aggregates non-OK artifact validation outcomes.
 
 Expectation source: `tests/artifact_validation_expected.json`
 
-Validated cases: 4182 / 4184 OK, 2 non-OK.
+Validated cases: 4184 / 4184 OK, 0 non-OK.
 
 Ignored artifact generation cases: 5.
 
 | Error message | Count | Sources |
 | --- | --- | --- |
-| ONNX Runtime error | 2 | artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test |
 
 ## Error frequency by source
 
 | Error message | Source | Count |
 | --- | --- | --- |
-| ONNX Runtime error | artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test | 2 |
 
 ## Failing artifact cases
 
@@ -27,8 +25,6 @@ Lists every artifact case with a non-OK expected validation result.
 
 | Case | Source | Error |
 | --- | --- | --- |
-| artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DBlkZp_run0 | artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test | [ONNXRuntimeError] : 1 : FAIL : Load model from D:/emmtrix/git/emx-ort-test-materializer/artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DBlkZp_run0/model.onnx failed:Node (node1) Op (MatMulFpQ4) [ShapeInferenceError] 4b quantization not yet supported on this hardware platform! |
-| artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DSym_run0 | artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test | [ONNXRuntimeError] : 1 : FAIL : Load model from D:/emmtrix/git/emx-ort-test-materializer/artifacts/onnxruntime/test/contrib_ops/matmul_fpq4_test/MatMul2DSym_run0/model.onnx failed:Node (node1) Op (MatMulFpQ4) [ShapeInferenceError] 4b quantization not yet supported on this hardware platform! |
 
 ## Ignored Artifact Generation Cases
 
