@@ -9,7 +9,6 @@ from pathlib import Path
 
 from emx_ort_test_materializer.ignored_artifact_cases import (
     IgnoredArtifactCase,
-    artifact_case_display_path,
 )
 
 DOCS_REGEN_COMMAND = (
@@ -40,6 +39,12 @@ def source_label(case_path: str) -> str:
     """Return the source-style grouping label for one artifact case path."""
     path = Path(case_path)
     return path.parent.as_posix()
+
+
+def artifact_case_display_path(path: str) -> str:
+    """Return the display path used in repository documentation."""
+    normalized = path.strip().strip("/")
+    return f"artifacts/{normalized}"
 
 
 def ignored_case_source_label(case: IgnoredArtifactCase) -> str:

@@ -229,24 +229,6 @@ def matches_expected_failure(error: Exception, validation: TestCaseValidation) -
     return validation.expected_failure_substring in message
 
 
-def environment_error_message(result: str) -> str | None:
-    """Return a normalized skip reason when validation failed due to local environment limits."""
-    normalized = result.lower()
-    environment_patterns = (
-        "not supported on this hardware platform",
-        "not yet supported on this hardware platform",
-        "is not supported by execution provider",
-        "failed to find kernel for",
-        "kernel not found",
-        "no op registered for",
-        "not implemented",
-        "no available kernel",
-    )
-    if any(pattern in normalized for pattern in environment_patterns):
-        return result
-    return None
-
-
 def resolve_test_case_path(path: Path) -> tuple[Path, list[Path]]:
     """Resolve a user-provided test case path to the test case directory and datasets."""
     resolved = path.resolve()

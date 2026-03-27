@@ -1,8 +1,7 @@
 """Load configured artifact cases that generation should skip.
 
 This module owns the tracked repository configuration for artifact test cases
-that are intentionally ignored during ONNX/TensorProto generation and related
-validation reporting.
+that are intentionally ignored during ONNX/TensorProto generation.
 """
 
 from __future__ import annotations
@@ -10,10 +9,6 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_IGNORED_CASES_PATH = REPO_ROOT / "artifact_generation_ignored_cases.json"
 
 
 @dataclass(frozen=True)
@@ -25,7 +20,7 @@ class IgnoredArtifactCase:
 
 
 def load_ignored_artifact_cases(
-    path: Path = DEFAULT_IGNORED_CASES_PATH,
+    path: Path,
 ) -> tuple[IgnoredArtifactCase, ...]:
     """Load ignored artifact cases from one tracked JSON file."""
     payload = json.loads(path.read_text(encoding="utf-8"))
@@ -46,9 +41,3 @@ def ignored_case_reasons_by_path(
 ) -> dict[str, str]:
     """Return a stable mapping from artifact-relative path to ignore reason."""
     return {case.path: case.reason for case in ignored_cases}
-
-
-def artifact_case_display_path(path: str) -> str:
-    """Return the display path used in repository documentation."""
-    normalized = path.strip().strip("/")
-    return f"artifacts/{normalized}"

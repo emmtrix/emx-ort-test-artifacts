@@ -36,6 +36,7 @@ from emx_ort_test_materializer.ignored_artifact_cases import (
 DEFAULT_ORT_TEST_RANDOM_SEED = "1337"
 DEFAULT_MAX_PARALLEL_JOBS = 8
 MINIMUM_CMAKE_VERSION = (3, 28, 0)
+DEFAULT_IGNORED_CASES_PATH = REPO_ROOT / "artifact_generation_ignored_cases.json"
 
 
 @dataclass(frozen=True)
@@ -628,7 +629,7 @@ def run_runtime_pipeline(
         gtest_filter,
         jobs,
     )
-    ignored_cases = load_ignored_artifact_cases()
+    ignored_cases = load_ignored_artifact_cases(DEFAULT_IGNORED_CASES_PATH)
     merged_chunks, ignored_count = filter_ignored_runtime_artifact_cases(
         merged_chunks,
         artifacts_output,

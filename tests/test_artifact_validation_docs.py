@@ -24,11 +24,12 @@ from emx_ort_test_materializer.ignored_artifact_cases import (
 
 EXPECTATIONS_PATH = REPO_ROOT / "tests" / "artifact_validation_expected.json"
 OVERVIEW_PATH = REPO_ROOT / "ARTIFACT_VALIDATION_ERRORS.md"
+IGNORED_CASES_PATH = REPO_ROOT / "artifact_generation_ignored_cases.json"
 
 
 def test_artifact_validation_error_doc() -> None:
     cases = load_cases(EXPECTATIONS_PATH)
-    ignored_cases = load_ignored_artifact_cases()
+    ignored_cases = load_ignored_artifact_cases(IGNORED_CASES_PATH)
     expected_markdown = render_overview_markdown(
         cases,
         repo_root=REPO_ROOT,

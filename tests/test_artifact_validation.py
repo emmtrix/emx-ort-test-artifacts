@@ -13,13 +13,28 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from emx_ort_test_materializer.validation import (
-    environment_error_message,
-    validate_test_case_result,
-)
+from emx_ort_test_materializer.validation import validate_test_case_result
 
 
 EXPECTATIONS_PATH = REPO_ROOT / "tests" / "artifact_validation_expected.json"
+
+
+def environment_error_message(result: str) -> str | None:
+    """Return a normalized skip reason when validation failed due to local environment limits."""
+    normalized = result.lower()
+    environment_patterns = (
+        "not supported on this hardware platform",
+        "not yet supported on this hardware platform",
+        "is not supported by execution provider",
+        "failed to find kernel for",
+        "kernel not found",
+        "no op registered for",
+        "not implemented",
+        "no available kernel",
+    )
+    if any(pattern in normalized for pattern in environment_patterns):
+        return result
+    return None
 
 
 def load_expectations() -> list[dict[str, str]]:
