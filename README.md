@@ -29,6 +29,8 @@ Useful files:
 - [`artifacts/README.md`](artifacts/README.md): artifact layout and format.
 - [`artifacts/MANIFEST.json`](artifacts/MANIFEST.json): dataset metadata.
 - [`artifacts/VALIDATION_ERRORS.md`](artifacts/VALIDATION_ERRORS.md): generated validation overview.
+- `artifacts/.../validation.json`: per-test-case replay metadata such as expected
+  failure state, provider constraints, and output-specific tolerances.
 
 The binary artifact payload is tracked with Git LFS via
 [`/.gitattributes`](.gitattributes).
@@ -47,8 +49,15 @@ artifacts/
       providers/
 ```
 
-Each lowest-level case directory contains a `model.onnx` and one or more
-`test_data_set_<n>/` directories with serialized protobuf inputs and outputs.
+Each currently checked-in test-case directory contains:
+
+- `model.onnx`
+- `validation.json`
+- one or more `test_data_set_<n>/` directories with serialized protobuf inputs
+  and outputs
+
+The validation metadata records replay expectations and output-comparison rules
+for that case.
 
 ## Repository Layout
 

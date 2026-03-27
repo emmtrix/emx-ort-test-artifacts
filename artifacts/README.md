@@ -63,6 +63,56 @@ artifacts/
 - `input_*.pb` and `output_*.pb`: binary `TensorProto` for dense tensors, or
   `SparseTensorProto` for sparse inputs.
 - `validation.json`: replay metadata captured from the originating ORT test.
+  In the current checked-in dataset, every test-case directory has this file.
+  The Python validation code still tolerates a missing file as a compatibility
+  fallback and then uses empty/default metadata.
+
+## `validation.json`
+
+`validation.json` describes how a checked-in test case should be interpreted
+during validation. The current schema is:
+
+```json
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "included_providers": ["CPU"],
+  "excluded_providers": ["CUDA"],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}
+```
+
+Field meanings:
+
+- `expects_failure`: marks a case captured from an ORT test that expected
+  failure. The current validator treats such a case as valid without replaying
+  output comparisons once the artifact structure is otherwise loadable.
+- `expected_failure_substring`: optional substring that must appear in the
+  runtime error when `expects_failure` is true and an exception is actually
+  observed during model load or execution.
+- `included_providers`: optional normalized provider names explicitly used by
+  the originating ORT test. These are currently informational only; the Python
+  validator always replays with `CPUExecutionProvider`.
+- `excluded_providers`: optional normalized provider names explicitly excluded
+  by the originating ORT test. These are currently informational only.
+- `outputs`: list of per-output comparison rules. Each entry is identified by
+  its `name` field and matched against the model output name during validation.
+- `outputs[].relative_error`: optional relative tolerance override.
+- `outputs[].absolute_error`: optional absolute tolerance override.
+- `outputs[].sort_output`: whether validation should compare this output after
+  flattening and sorting it.
+
+If both provider lists are absent, the original ORT test used its default
+provider selection. The runtime extractor currently writes `expects_failure`,
+`expected_failure_substring`, and `outputs` for every generated case, and only
+emits the provider lists when they are non-empty.
 
 ## Maintainer Context
 
