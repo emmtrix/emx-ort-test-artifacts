@@ -22,17 +22,21 @@ set(protobuf_MSVC_STATIC_RUNTIME OFF CACHE BOOL "" FORCE)
 
 set(EMX_ORT_REPO_ROOT "${CMAKE_CURRENT_LIST_DIR}/../..")
 get_filename_component(EMX_ORT_REPO_ROOT "${EMX_ORT_REPO_ROOT}" ABSOLUTE)
+if(NOT DEFINED EMX_ORT_SOURCE_ROOT)
+  message(FATAL_ERROR "EMX_ORT_SOURCE_ROOT must point to a local ONNX Runtime source checkout.")
+endif()
+get_filename_component(EMX_ORT_SOURCE_ROOT "${EMX_ORT_SOURCE_ROOT}" ABSOLUTE)
 
-add_subdirectory("${EMX_ORT_REPO_ROOT}/onnxruntime-org/cmake" "${CMAKE_BINARY_DIR}/onnxruntime")
+add_subdirectory("${EMX_ORT_SOURCE_ROOT}/cmake" "${CMAKE_BINARY_DIR}/onnxruntime")
 
 function(emx_apply_runtime_extractor_target_settings target_name)
   target_compile_features("${target_name}" PRIVATE cxx_std_20)
   target_include_directories(
-    "${target_name}"
+      "${target_name}"
     PRIVATE
       "${EMX_ORT_REPO_ROOT}"
-      "${EMX_ORT_REPO_ROOT}/onnxruntime-org/onnxruntime"
-      "${EMX_ORT_REPO_ROOT}/onnxruntime-org/include/onnxruntime"
+      "${EMX_ORT_SOURCE_ROOT}/onnxruntime"
+      "${EMX_ORT_SOURCE_ROOT}/include/onnxruntime"
       "${CMAKE_BINARY_DIR}/onnxruntime"
       "${CMAKE_BINARY_DIR}/generated"
   )

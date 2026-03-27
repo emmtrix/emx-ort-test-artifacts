@@ -31,7 +31,8 @@ installation or a full build.
 
 ## Scope
 
-- Read test sources and data from the bundled ONNX Runtime submodule.
+- Read test sources and data from a local ONNX Runtime checkout prepared on
+  demand from the pinned `onnxruntime` version in `requirements.txt`.
 - **Python tests**: instrument `InferenceSession` / helper calls to capture model and
   input/output tensors.
 - **C++ tests**: discover and collect pre-existing test-data files (`.onnx`, `.pb`)
@@ -46,7 +47,7 @@ installation or a full build.
 
 - This is **not** a distributable Python package.
 - It does **not** run the full ORT test-suite.
-- It does **not** modify ONNX Runtime source code or the bundled submodule.
+- It does **not** modify ONNX Runtime source code in the prepared checkout.
 - It does **not** provide release automation or package publishing.
 
 ---
@@ -109,8 +110,6 @@ the layout and naming conventions.
 │       └── writer.py                 # future serialization logic
 ├── artifacts/
 │   └── README.md                     # layout documentation
-└── onnxruntime-org/
-    └── onnxruntime/                  # git submodule
 ```
 
 ---
@@ -141,7 +140,9 @@ ORT test runner, executes the selected C++ unit tests, and captures the real
 
 Current behavior:
 
-- Builds ONNX Runtime test utilities without modifying the submodule.
+- Clones or updates a local ONNX Runtime checkout under `build/` based on the
+  pinned `onnxruntime` package version.
+- Builds ONNX Runtime test utilities without modifying that checkout in place.
 - Generates one wrapper target per selected ORT test source.
 - Builds those wrapper targets in parallel after the shared ORT libraries are ready.
 - Scans only `OpTester`-based C++ sources in directory mode.
@@ -162,7 +163,7 @@ Example:
 
 ```bash
 python scripts/extract_test_artifacts.py \
-  --cpp-source onnxruntime-org/onnxruntime/test/contrib_ops/qlinear_lookup_table_test.cc \
+  --cpp-source onnxruntime/test/contrib_ops/qlinear_lookup_table_test.cc \
   --artifacts-output artifacts \
   --gtest-filter QLinearLookupTableBasedOperatorTests.* \
   --jobs 4

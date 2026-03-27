@@ -11,8 +11,8 @@ Refer to [AGENTS.md](../AGENTS.md) for all project-specific guidance.
   single-responsibility module or function at a time.
 - **Scope covers all ORT tests** – both Python-based and C++-based.  Do not
   restrict designs or documentation to Python tests only.
-- **Do not compile or run C++ test binaries.**  C++ test-data files are
-  discovered and copied statically from the submodule.
+- **Do not run the full ORT test suite blindly.**  Build or execute only the
+  targeted extractor flow that is required for the current task.
 - **Do not add `pyproject.toml`** or any packaging configuration.  This is a
   non-packaged internal utility.
 - **Do not add CI workflows** or test runners.

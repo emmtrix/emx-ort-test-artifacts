@@ -7,9 +7,9 @@ This module handles **both** Python-based and C++-based ONNX Runtime tests:
 
 Python tests
 ~~~~~~~~~~~~
-- Discover test modules under the ONNX Runtime submodule at paths such as
-  ``onnxruntime-org/onnxruntime/onnxruntime/test/python/`` and
-  ``onnxruntime-org/onnxruntime/onnxruntime/test/python/contrib_ops/``.
+- Discover test modules under a prepared ONNX Runtime source checkout at paths
+  such as ``onnxruntime/onnxruntime/test/python/`` and
+  ``onnxruntime/onnxruntime/test/python/contrib_ops/``.
 - Monkey-patch ``onnxruntime.InferenceSession`` (and related helpers) so that
   model bytes and numpy input/output arrays are intercepted before and after
   each test invocation.
@@ -21,8 +21,8 @@ C++ tests
 - Scan the ORT source tree for ``.onnx`` and ``.pb`` files that are referenced
   by C++ test sources, located under paths such as:
 
-  * ``onnxruntime-org/onnxruntime/onnxruntime/test/testdata/``
-  * ``onnxruntime-org/onnxruntime/onnxruntime/test/providers/``
+  * ``onnxruntime/onnxruntime/test/testdata/``
+  * ``onnxruntime/onnxruntime/test/providers/``
 
 - No C++ compilation or binary execution is required; files are discovered and
   copied statically.
@@ -42,7 +42,7 @@ def discover_python_test_files(base_path: str) -> list[str]:
     ----------
     base_path:
         Root of the ONNX Runtime source tree, e.g.
-        ``"onnxruntime-org/onnxruntime"``.
+        ``"onnxruntime"``.
 
     Returns
     -------
@@ -64,7 +64,7 @@ def discover_cpp_test_data_files(base_path: str) -> list[tuple[str, str]]:
     ----------
     base_path:
         Root of the ONNX Runtime source tree, e.g.
-        ``"onnxruntime-org/onnxruntime"``.
+        ``"onnxruntime"``.
 
     Returns
     -------

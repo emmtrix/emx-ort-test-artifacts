@@ -48,8 +48,8 @@ artifacts/
 | `onnxruntime/test/python/contrib_ops/<file>.py`   | `test/python/contrib_ops/<file>/<test_case>/`  | Python instrumentation     |
 | `onnxruntime/test/python/<file>.py`               | `test/python/<file>/<test_case>/`              | Python instrumentation     |
 | `onnxruntime/test/contrib_ops/<file>.cc`          | `test/contrib_ops/<file>/<test_name>_run<n>/`  | Runtime `OpTester` wrapper |
-| `onnxruntime/test/testdata/<name>/`               | `test/testdata/<name>/`                        | Static copy from submodule |
-| `onnxruntime/test/providers/<name>/`              | `test/providers/<name>/`                       | Static copy from submodule |
+| `onnxruntime/test/testdata/<name>/`               | `test/testdata/<name>/`                        | Static copy from ORT checkout |
+| `onnxruntime/test/providers/<name>/`              | `test/providers/<name>/`                       | Static copy from ORT checkout |
 
 ### Naming Rules
 

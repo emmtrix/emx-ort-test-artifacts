@@ -27,18 +27,21 @@ def test_write_runtime_target_manifest_creates_aggregate_parallel_target(
 ) -> None:
     """Generate one target manifest and verify the shared aggregate build target exists."""
     module = load_script_module()
+    ort_repo_root = tmp_path / "onnxruntime-org"
     source_file = (
-        REPO_ROOT
-        / "onnxruntime-org"
+        ort_repo_root
         / "onnxruntime"
         / "test"
         / "contrib_ops"
         / "cdist_op_test.cc"
     )
+    source_file.parent.mkdir(parents=True, exist_ok=True)
+    source_file.write_text("OpTester test_source;\n", encoding="utf-8")
 
     target_specs = module.write_runtime_target_manifest(
         tmp_path / "ort_runtime_extractor",
         [source_file],
+        ort_repo_root,
         Path("onnxruntime/test/contrib_ops"),
     )
 
@@ -59,6 +62,28 @@ def test_write_runtime_target_manifest_creates_aggregate_parallel_target(
         "add_custom_target(ort_cpp_test_runtime_extractors DEPENDS "
         "${EMX_ORT_RUNTIME_EXTRACTOR_TARGETS})"
     ) in manifest_text
+
+
+def test_resolve_cpp_source_path_maps_legacy_submodule_prefix(tmp_path: Path) -> None:
+    """Accept legacy onnxruntime-org-prefixed source paths against the cloned checkout."""
+    module = load_script_module()
+    ort_repo_root = tmp_path / "onnxruntime-org"
+    source_file = (
+        ort_repo_root
+        / "onnxruntime"
+        / "test"
+        / "contrib_ops"
+        / "demo_test.cc"
+    )
+    source_file.parent.mkdir(parents=True, exist_ok=True)
+    source_file.write_text("OpTester demo;\n", encoding="utf-8")
+
+    resolved = module.resolve_cpp_source_path(
+        Path("onnxruntime-org/onnxruntime/test/contrib_ops/demo_test.cc"),
+        ort_repo_root,
+    )
+
+    assert resolved == source_file.resolve()
 
 
 def test_default_parallel_jobs_is_never_less_than_one() -> None:
