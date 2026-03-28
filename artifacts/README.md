@@ -10,6 +10,7 @@ the maintenance tooling under `tools/`.
 
 - `onnxruntime/`: tracked artifact dataset mirroring ONNX Runtime test sources.
 - `MANIFEST.json`: dataset-level metadata, including the pinned source version.
+- `OPERATORS.md`: generated Markdown summary of operators, counts, and grouped test-case paths.
 - `VALIDATION_ERRORS.md`: generated summary of non-OK validation outcomes and ignored cases.
 
 All files in this directory are committed so downstream tooling can consume
