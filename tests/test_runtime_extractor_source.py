@@ -14,6 +14,7 @@ def test_runtime_extractor_env_uses_single_thread_global_pools() -> None:
     assert "threading_options.SetGlobalIntraOpNumThreads(1);" in source
     assert "threading_options.SetGlobalInterOpNumThreads(1);" in source
     assert "threading_options.SetGlobalSpinControl(0);" in source
+    assert "std::make_unique<Ort::Env>(threading_options, ORT_LOGGING_LEVEL_WARNING, \"emx_ort_runtime_extractor\")" in source
 
 
 def test_runtime_capture_normalizes_session_options_for_determinism() -> None:
