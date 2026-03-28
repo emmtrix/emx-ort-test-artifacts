@@ -33,7 +33,7 @@ jobs:
       CMAKE_CXX_COMPILER_LAUNCHER: ccache
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       CCACHE_MAXSIZE: 2G
-      CCACHE_RUN_START_MARKER: ${{ runner.temp }}/ccache-run-start
+      CCACHE_RUN_START_MARKER: ${{ github.workspace }}/.ccache-run-start
 
     steps:
       - name: Check out target branch
