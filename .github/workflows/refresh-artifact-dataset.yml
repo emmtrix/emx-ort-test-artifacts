@@ -96,6 +96,10 @@ jobs:
         if: env.WARM_CCACHE_ONLY != 'true'
         run: python tools/scripts/generate_artifact_validation_overview.py
 
+      - name: Refresh operator report
+        if: env.WARM_CCACHE_ONLY != 'true'
+        run: python tools/scripts/generate_operator_markdown.py
+
       - name: Run pytest
         if: env.WARM_CCACHE_ONLY != 'true'
         run: pytest -q
