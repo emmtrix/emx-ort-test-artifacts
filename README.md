@@ -1,8 +1,15 @@
 # emx-ort-test-artifacts
 
-This repository primarily contains versioned ONNX Runtime-derived test artifacts.
-The tracked `artifacts/` tree is the product. The code under `tools/` exists only
-to refresh, validate, and document that dataset during development.
+[`ONNX Runtime`](https://github.com/microsoft/onnxruntime)'s tests generate models and test vectors on the fly (Python/C++ test code).
+That is great for ORT's own CI, but makes the test cases inconvenient to reuse outside
+the ONNX Runtime test harness.
+
+This repository materializes those test cases into a versioned dataset of [`ONNX`](https://github.com/onnx/onnx) artifacts.
+The core artifact layout follows the [ONNX backend test-data layout](https://github.com/onnx/onnx/tree/main/onnx/backend/test/data)
+(`model.onnx` plus `test_data_set_<n>/` with `input_*.pb` / `output_*.pb`). The main difference is the additional
+`validation.json` metadata files shipped alongside each test case (plus aggregated validation reports).
+The tracked `artifacts/` tree is the product. The code under `tools/` exists only to
+refresh, validate, and document that dataset during development.
 
 Downstream consumers should treat this repository as a data source for checked-in
 `model.onnx`, `input_*.pb`, `output_*.pb`, and related metadata files.
@@ -30,8 +37,13 @@ Useful files:
 - [`artifacts/MANIFEST.json`](artifacts/MANIFEST.json): dataset metadata.
 - [`artifacts/OPERATORS.md`](artifacts/OPERATORS.md): generated operator summary with counts and grouped test-case lists.
 - [`artifacts/VALIDATION_ERRORS.md`](artifacts/VALIDATION_ERRORS.md): generated validation overview.
-- `artifacts/.../validation.json`: per-test-case replay metadata such as expected
-  failure state, provider constraints, and output-specific tolerances.
+- `artifacts/.../validation.json`: per-test-case replay metadata captured from the originating ORT test.
+
+`validation.json` captures (most relevant fields):
+
+- Negative/expected-failure cases (`expects_failure` plus optional `expected_failure_substring`)
+- Backend constraints via ORT Execution Providers (`included_providers` / `excluded_providers`)
+- Per-output comparison rules (`absolute_error`, `relative_error`, `sort_output`)
 
 The binary artifact payload is tracked with Git LFS via
 [`/.gitattributes`](.gitattributes).
