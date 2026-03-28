@@ -31,6 +31,13 @@ namespace fs = std::filesystem;
 namespace emx::ort_runtime {
 namespace {
 
+void ApplyDeterministicSessionOptions(onnxruntime::SessionOptions& session_options) {
+  session_options.execution_mode = ExecutionMode::ORT_SEQUENTIAL;
+  session_options.use_per_session_threads = false;
+  session_options.intra_op_param.thread_pool_size = 1;
+  session_options.inter_op_param.thread_pool_size = 1;
+}
+
 bool IsQuantizeLstmReferenceHelper(const CapturingOpTester& tester) {
   constexpr std::string_view kQuantizeLstmSource =
       "onnxruntime/test/contrib_ops/quantize_lstm_op_test.cc";
@@ -1107,19 +1114,21 @@ void CapturingOpTester::Run(
     std::vector<std::unique_ptr<onnxruntime::IExecutionProvider>>* execution_providers,
     ExecutionMode execution_mode,
     const onnxruntime::Graph::ResolveOptions& resolve_options) {
+  ORT_UNUSED_PARAMETER(execution_mode);
   CaptureSnapshot(
       true,
       expect_result,
       expected_failure_string,
       &excluded_provider_types,
       execution_providers);
+  constexpr ExecutionMode deterministic_execution_mode = ExecutionMode::ORT_SEQUENTIAL;
   onnxruntime::test::OpTester::Run(
       expect_result,
       expected_failure_string,
       excluded_provider_types,
       run_options,
       execution_providers,
-      execution_mode,
+      deterministic_execution_mode,
       resolve_options);
 }
 
@@ -1133,6 +1142,7 @@ void CapturingOpTester::Run(
     const onnxruntime::Graph::ResolveOptions& resolve_options,
     size_t* number_of_pre_packed_weights_counter,
     size_t* number_of_shared_pre_packed_weights_counter) {
+  ApplyDeterministicSessionOptions(session_options);
   CaptureSnapshot(
       true,
       expect_result,
@@ -1154,6 +1164,9 @@ void CapturingOpTester::Run(
 void CapturingOpTester::RunWithConfig(
     size_t* number_of_pre_packed_weights_counter,
     size_t* number_of_shared_pre_packed_weights_counter) {
+  auto session_options = GetRunContext().session_options;
+  ApplyDeterministicSessionOptions(session_options);
+  Config(session_options);
   const auto& run_context = GetRunContext();
   CaptureSnapshot(
       true,

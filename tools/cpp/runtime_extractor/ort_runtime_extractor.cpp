@@ -60,8 +60,11 @@ std::unique_ptr<Ort::Env> ort_env;
 namespace emx::ort_runtime {
 
 void SetupOrtEnvironment() {
-  OrtThreadingOptions threading_options;
-  ort_env = std::make_unique<Ort::Env>(&threading_options, ORT_LOGGING_LEVEL_WARNING, "emx_ort_runtime_extractor");
+  Ort::ThreadingOptions threading_options;
+  threading_options.SetGlobalIntraOpNumThreads(1);
+  threading_options.SetGlobalInterOpNumThreads(1);
+  threading_options.SetGlobalSpinControl(0);
+  ort_env = std::make_unique<Ort::Env>(threading_options, ORT_LOGGING_LEVEL_WARNING, "emx_ort_runtime_extractor");
 }
 
 void TearDownOrtEnvironment() {
