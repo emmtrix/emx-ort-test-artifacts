@@ -1,4 +1,4 @@
-# emx-ort-test-materializer
+# emx-ort-test-artifacts
 
 This repository primarily contains versioned ONNX Runtime-derived test artifacts.
 The tracked `artifacts/` tree is the product. The code under `tools/` exists only
