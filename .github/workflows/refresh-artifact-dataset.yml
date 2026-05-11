@@ -22,6 +22,7 @@ concurrency:
 
 env:
   LARGEST_DIRECTORIES_COUNT: 20
+  LARGEST_DIRECTORIES_MAX_DEPTH: 6
 
 jobs:
   refresh:
@@ -139,4 +140,4 @@ jobs:
         if: always()
         run: |
           echo "Top ${LARGEST_DIRECTORIES_COUNT} largest directories under ${GITHUB_WORKSPACE}:"
-          du -x -h -d 6 "${GITHUB_WORKSPACE}" 2>/dev/null | sort -hr | head -n "${LARGEST_DIRECTORIES_COUNT}" || true
+          du -x -h -d "${LARGEST_DIRECTORIES_MAX_DEPTH}" "${GITHUB_WORKSPACE}" 2>/dev/null | sort -hr | head -n "${LARGEST_DIRECTORIES_COUNT}" || true
