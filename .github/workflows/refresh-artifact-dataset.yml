@@ -81,7 +81,7 @@ jobs:
           rm -rf artifacts/onnxruntime
           rm -rf artifacts/onnxruntime-negative
           mkdir -p artifacts
-          python tools/scripts/extract_test_artifacts.py --artifacts-output artifacts --rebuild
+          python tools/scripts/extract_test_artifacts.py --artifacts-output artifacts --rebuild --jobs 4
 
       - name: Refresh validation expectations
         if: env.WARM_CCACHE_ONLY != 'true'
