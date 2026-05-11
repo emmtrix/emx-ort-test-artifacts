@@ -115,7 +115,7 @@ jobs:
         run: echo "Skipping commit and push because this pull request comes from a fork."
 
       - name: Prune ccache entries not used in this run
-        if: success()
+        if: always()
         run: |
           for cache_bucket in "${CCACHE_DIR}"/[0-9a-f]; do
             if [ -d "${cache_bucket}" ]; then
@@ -126,7 +126,7 @@ jobs:
           ccache -s
 
       - name: Save ccache objects
-        if: success()
+        if: always()
         uses: actions/cache/save@v4
         with:
           path: ${{ env.CCACHE_DIR }}
