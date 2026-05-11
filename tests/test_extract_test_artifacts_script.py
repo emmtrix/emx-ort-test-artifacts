@@ -123,6 +123,16 @@ def test_optional_lld_linker_cmake_args_returns_empty_without_lld(monkeypatch) -
     assert module.optional_lld_linker_cmake_args() == []
 
 
+def test_optional_lld_linker_cmake_args_returns_empty_on_windows(monkeypatch) -> None:
+    """Skip linker override on Windows even when ld.lld is present."""
+    module = load_script_module()
+
+    monkeypatch.setattr(module.os, "name", "nt", raising=False)
+    monkeypatch.setattr(module.shutil, "which", lambda _name: "C:/Program Files/LLVM/bin/ld.lld.exe")
+
+    assert module.optional_lld_linker_cmake_args() == []
+
+
 def test_filter_ignored_runtime_artifact_cases_removes_records_and_directories(
     tmp_path: Path,
 ) -> None:
