@@ -23,12 +23,12 @@ from emx_ort_test_materializer.onnxruntime_source import (
 def test_read_pinned_onnxruntime_version_matches_requirements() -> None:
     """Keep the source checkout version aligned with the pinned runtime package."""
     version = read_pinned_onnxruntime_version(REPO_ROOT / "requirements.txt")
-    assert version == "1.24.4"
+    assert version == "1.26.0"
 
 
 def test_onnxruntime_version_tag_derives_release_tag() -> None:
     """Map the pinned package version to the matching ORT release tag."""
-    assert onnxruntime_version_tag("1.24.4") == "v1.24.4"
+    assert onnxruntime_version_tag("1.26.0") == "v1.26.0"
 
 
 def test_default_onnxruntime_checkout_dir_uses_build_tree() -> None:
