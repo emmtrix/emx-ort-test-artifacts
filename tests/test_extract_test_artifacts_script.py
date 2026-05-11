@@ -99,6 +99,30 @@ def test_parse_version_tuple_reads_cmake_versions() -> None:
     assert module.parse_version_tuple("invalid") is None
 
 
+def test_optional_lld_linker_cmake_args_returns_lld_flags_when_available(monkeypatch) -> None:
+    """Enable lld linker flags for non-Windows hosts when ld.lld is present."""
+    module = load_script_module()
+
+    monkeypatch.setattr(module.os, "name", "posix", raising=False)
+    monkeypatch.setattr(module.shutil, "which", lambda name: "/usr/bin/ld.lld" if name == "ld.lld" else None)
+
+    assert module.optional_lld_linker_cmake_args() == [
+        "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=lld",
+        "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld",
+        "-DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld",
+    ]
+
+
+def test_optional_lld_linker_cmake_args_returns_empty_without_lld(monkeypatch) -> None:
+    """Skip linker override when ld.lld is unavailable."""
+    module = load_script_module()
+
+    monkeypatch.setattr(module.os, "name", "posix", raising=False)
+    monkeypatch.setattr(module.shutil, "which", lambda _name: None)
+
+    assert module.optional_lld_linker_cmake_args() == []
+
+
 def test_filter_ignored_runtime_artifact_cases_removes_records_and_directories(
     tmp_path: Path,
 ) -> None:

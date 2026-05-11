@@ -234,7 +234,21 @@ def configure_runtime_extractor(
         if shutil.which("ninja"):
             command.extend(["-G", "Ninja"])
         command.append("-DCMAKE_BUILD_TYPE=RelWithDebInfo")
+        command.extend(optional_lld_linker_cmake_args())
     run_logged_command(command, check=True)
+
+
+def optional_lld_linker_cmake_args() -> list[str]:
+    """Return CMake flags that enable the LLVM lld linker when it is available."""
+    if os.name == "nt":
+        return []
+    if shutil.which("ld.lld") is None:
+        return []
+    return [
+        "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=lld",
+        "-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=lld",
+        "-DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=lld",
+    ]
 
 
 def helper_source_files(source_file: Path, ort_repo_root: Path) -> list[Path]:
