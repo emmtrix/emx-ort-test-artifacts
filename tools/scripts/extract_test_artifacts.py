@@ -239,7 +239,7 @@ def configure_runtime_extractor(
 
 
 def optional_lld_linker_cmake_args() -> list[str]:
-    """Return CMake flags that enable the LLVM lld linker when it is available."""
+    """Return CMake flags that enable lld on non-Windows hosts when available."""
     if os.name == "nt":
         return []
     if shutil.which("ld.lld") is None:
