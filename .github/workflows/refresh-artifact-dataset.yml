@@ -115,7 +115,7 @@ jobs:
         run: echo "Skipping commit and push because this pull request comes from a fork."
 
       - name: Prune ccache entries not used in this run
-        if: always()
+        if: success()
         run: |
           for cache_bucket in "${CCACHE_DIR}"/[0-9a-f]; do
             if [ -d "${cache_bucket}" ]; then
