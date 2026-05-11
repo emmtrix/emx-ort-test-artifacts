@@ -92,6 +92,49 @@ def test_default_parallel_jobs_is_never_less_than_one() -> None:
     assert module.default_parallel_jobs() >= 1
 
 
+def test_helper_source_files_skips_webgpu_contrib_helpers(tmp_path: Path) -> None:
+    """Ignore contrib_ops/webgpu helper translation units during source wrapping."""
+    module = load_script_module()
+    ort_repo_root = tmp_path / "onnxruntime-org"
+    ort_source_root = ort_repo_root / "onnxruntime"
+    source_file = ort_source_root / "test" / "contrib_ops" / "demo_test.cc"
+    source_file.parent.mkdir(parents=True, exist_ok=True)
+    source_file.write_text(
+        '\n'.join(
+            [
+                '#include "test/contrib_ops/helper.h"',
+                '#include "contrib_ops/webgpu/quantization/matmul_nbits_common.h"',
+                "OpTester demo;",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    helper_header = ort_source_root / "test" / "contrib_ops" / "helper.h"
+    helper_header.parent.mkdir(parents=True, exist_ok=True)
+    helper_header.write_text("// helper\n", encoding="utf-8")
+    helper_source = helper_header.with_suffix(".cc")
+    helper_source.write_text("// helper impl\n", encoding="utf-8")
+
+    webgpu_header = (
+        ort_source_root
+        / "contrib_ops"
+        / "webgpu"
+        / "quantization"
+        / "matmul_nbits_common.h"
+    )
+    webgpu_header.parent.mkdir(parents=True, exist_ok=True)
+    webgpu_header.write_text("// webgpu helper\n", encoding="utf-8")
+    webgpu_source = webgpu_header.with_suffix(".cc")
+    webgpu_source.write_text("// webgpu impl\n", encoding="utf-8")
+
+    helper_sources = module.helper_source_files(source_file, ort_repo_root)
+
+    assert helper_sources == [helper_source.resolve()]
+    assert webgpu_source.resolve() not in helper_sources
+
+
 def test_parse_version_tuple_reads_cmake_versions() -> None:
     """Parse dotted CMake versions for minimum-version selection."""
     module = load_script_module()
