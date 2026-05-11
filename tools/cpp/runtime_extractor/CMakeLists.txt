@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(emx_ort_runtime_extractor CXX)
+project(emx_ort_runtime_extractor C CXX)
 
 if(MSVC)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
