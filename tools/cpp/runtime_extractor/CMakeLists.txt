@@ -29,6 +29,53 @@ get_filename_component(EMX_ORT_SOURCE_ROOT "${EMX_ORT_SOURCE_ROOT}" ABSOLUTE)
 
 add_subdirectory("${EMX_ORT_SOURCE_ROOT}/cmake" "${CMAKE_BINARY_DIR}/onnxruntime")
 
+set(
+  EMX_ORT_REPORT_TARGET_SIZE_SCRIPT
+  "${EMX_ORT_REPO_ROOT}/tools/cpp/runtime_extractor/report_target_size.cmake"
+)
+
+function(emx_enable_target_size_report target_name)
+  get_target_property(target_type "${target_name}" TYPE)
+  if(NOT target_type MATCHES "^(EXECUTABLE|STATIC_LIBRARY|SHARED_LIBRARY|MODULE_LIBRARY)$")
+    return()
+  endif()
+
+  get_target_property(is_imported "${target_name}" IMPORTED)
+  if(is_imported)
+    return()
+  endif()
+
+  get_target_property(size_report_enabled "${target_name}" EMX_ORT_SIZE_REPORT_ENABLED)
+  if(size_report_enabled)
+    return()
+  endif()
+
+  set_target_properties("${target_name}" PROPERTIES EMX_ORT_SIZE_REPORT_ENABLED ON)
+  add_custom_command(
+    TARGET "${target_name}"
+    POST_BUILD
+    COMMAND
+      "${CMAKE_COMMAND}"
+      "-Dtarget_name=${target_name}"
+      "-Dtarget_file=$<TARGET_FILE:${target_name}>"
+      -P
+      "${EMX_ORT_REPORT_TARGET_SIZE_SCRIPT}"
+    VERBATIM
+  )
+endfunction()
+
+function(emx_enable_target_size_reports_in_directory directory_path)
+  get_property(directory_targets DIRECTORY "${directory_path}" PROPERTY BUILDSYSTEM_TARGETS)
+  foreach(target_name IN LISTS directory_targets)
+    emx_enable_target_size_report("${target_name}")
+  endforeach()
+
+  get_property(subdirectories DIRECTORY "${directory_path}" PROPERTY SUBDIRECTORIES)
+  foreach(subdirectory IN LISTS subdirectories)
+    emx_enable_target_size_reports_in_directory("${subdirectory}")
+  endforeach()
+endfunction()
+
 function(emx_apply_runtime_extractor_target_settings target_name)
   target_compile_features("${target_name}" PRIVATE cxx_std_20)
   target_include_directories(
@@ -117,3 +164,5 @@ if(NOT EXISTS "${EMX_RUNTIME_TARGETS_FILE}")
 endif()
 
 include("${EMX_RUNTIME_TARGETS_FILE}")
+
+emx_enable_target_size_reports_in_directory("${CMAKE_SOURCE_DIR}")
