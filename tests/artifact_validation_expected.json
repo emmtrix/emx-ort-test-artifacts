@@ -1,6 +1,10 @@
 {
   "test_cases": [
     {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/embed_layer_norm_op_test/EmbedLayerNormNegativePositionIds_run0",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/expand_dims_test/NegativeAxisOutOfRange_run0",
       "expected_result": "OK"
     },
@@ -349,6 +353,26 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/rotary_embedding_op_test/ContribRotaryEmbedding_PositionIds_ExceedsMaxSeqLen_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/rotary_embedding_op_test/ContribRotaryEmbedding_PositionIds_Format0_Negative_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/rotary_embedding_op_test/ContribRotaryEmbedding_PositionIds_Format0_OOB_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/rotary_embedding_op_test/ContribRotaryEmbedding_PositionIds_Negative_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/rotary_embedding_op_test/ContribRotaryEmbedding_PositionIds_OOB_InBatch_run0",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/word_conv_embedding_test/WordConvEmbedding_char_embedding_shape_conv_shape_not_match_run0",
       "expected_result": "OK"
     },
@@ -362,6 +386,14 @@
     },
     {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/word_conv_embedding_test/WordConvEmbedding_embedding_size_mismatch_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/word_conv_embedding_test/WordConvEmbedding_rejects_filter_width_larger_than_word_length_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/word_conv_embedding_test/WordConvEmbedding_rejects_sequence_rank_one_run0",
       "expected_result": "OK"
     },
     {
@@ -654,6 +686,122 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/bifurcation_detector_op_test/Test2_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/BasicNoStateNoBias_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/BasicNoStateNoBias_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/BasicWithBias_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/BasicWithBias_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/BasicWithState_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/BasicWithState_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/KernelSize2_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/KernelSize2_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/KernelSize4_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/KernelSize4_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/LargerDimensions_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/LargerDimensions_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/MultiBatch_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/MultiBatch_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SiluActivationNoState_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SiluActivationNoState_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SiluActivationWithBiasAndState_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SiluActivationWithBiasAndState_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SiluActivationWithState_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SiluActivationWithState_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SingleTokenDecodeMultiBatch_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SingleTokenDecodeMultiBatch_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SingleTokenDecode_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/SingleTokenDecode_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/StateContinuity_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/StateContinuity_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/StateContinuity_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/WithStateAndBias_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/causal_conv_with_state_op_test/WithStateAndBias_run1",
       "expected_result": "OK"
     },
     {
@@ -2634,6 +2782,110 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/layer_norm_op_test/LayerNorm_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/DeltaRule_MultiToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/DeltaRule_SingleToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_BroadcastDecay_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_InverseGQA_LargerDims_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_InverseGQA_Small_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_KGQA_Small_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_LargerDims_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_LongerSequence_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_MultiBatchMultiHead_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_MultiToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_NonPowerOf2DK_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_Qwen35Like_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_Qwen35_KGQA_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedDeltaRule_SingleToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedRule_BroadcastDecay_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedRule_LargerDims_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedRule_MultiToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/GatedRule_SingleToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_DefaultScale_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_InverseGQA_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_KGQA_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_LargerDims_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_MultiBatchMultiHead_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_MultiToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_SingleToken_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/linear_attention_op_test/LinearRule_WithInitialState_run0",
       "expected_result": "OK"
     },
     {
@@ -10125,6 +10377,14 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/moe_test/QMoETest_CPU_RouterWeights_run1",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttentionWithPast_run0",
       "expected_result": "OK"
     },
@@ -10210,6 +10470,14 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_DiffSequenceLengths_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_WithPastPassedInDirectly_NoMask_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/multihead_attention_op_test/CrossAttention_WithPastPassedInDirectly_NoMask_run1",
       "expected_result": "OK"
     },
     {
@@ -16718,6 +16986,10 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/unique_op_test/Unique_Spec_Example_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/word_conv_embedding_test/WordConvEmbedding_out_of_range_char_index_treated_as_padding_run0",
       "expected_result": "OK"
     },
     {

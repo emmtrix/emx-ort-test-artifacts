@@ -8,7 +8,7 @@
   "repository_role": "artifact-first",
   "tracked_artifacts_are_primary_payload": true,
   "source_repository": "https://github.com/microsoft/onnxruntime",
-  "pinned_onnxruntime_version": "1.24.4",
+  "pinned_onnxruntime_version": "1.25.1",
   "validation_expectations_path": "tests/artifact_validation_expected.json",
   "validation_report_path": "artifacts/VALIDATION_ERRORS.md",
   "ignored_generation_cases_path": "artifact_generation_ignored_cases.json",
