@@ -33,3 +33,12 @@ def test_runtime_capture_rewrites_negative_cases_to_separate_root() -> None:
     assert "fs::path RewriteArtifactSourcePathForStorage(const CapturedRecord& record)" in source
     assert 'component->generic_string() != "onnxruntime"' in source
     assert 'fs::path rewritten("onnxruntime-negative");' in source
+
+
+def test_runtime_capture_strips_disabled_gtest_prefix_from_artifact_names() -> None:
+    source = CAPTURE_CPP.read_text(encoding="utf-8")
+
+    assert "std::string StripDisabledGtestPrefix(std::string_view value)" in source
+    assert 'constexpr std::string_view kDisabledPrefix = "DISABLED_";' in source
+    assert "record.test_name = StripDisabledGtestPrefix(test_info->name());" in source
+    assert "CaptureCollector::Instance().AllocateRunIndex(test_suite, test_name)" in source

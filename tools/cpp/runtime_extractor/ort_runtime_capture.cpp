@@ -242,6 +242,16 @@ std::string SanitizePathComponent(std::string_view value) {
   return sanitized;
 }
 
+std::string StripDisabledGtestPrefix(std::string_view value) {
+  constexpr std::string_view kDisabledPrefix = "DISABLED_";
+  if (value.size() >= kDisabledPrefix.size() &&
+      value.substr(0, kDisabledPrefix.size()) == kDisabledPrefix) {
+    return std::string(value.substr(kDisabledPrefix.size()));
+  }
+
+  return std::string(value);
+}
+
 fs::path RewriteArtifactSourcePathForStorage(const CapturedRecord& record) {
   const fs::path source_file(record.source_file);
   if (!record.expects_failure) {
@@ -965,8 +975,8 @@ CapturedRecord BuildRecordFromTester(
   }
 
   if (const auto* test_info = ::testing::UnitTest::GetInstance()->current_test_info(); test_info != nullptr) {
-    record.test_suite = test_info->test_suite_name();
-    record.test_name = test_info->name();
+    record.test_suite = StripDisabledGtestPrefix(test_info->test_suite_name());
+    record.test_name = StripDisabledGtestPrefix(test_info->name());
   }
 
   const auto initializer_indexes = std::set<size_t>(
@@ -1210,8 +1220,8 @@ void CapturingOpTester::CaptureSnapshot(
   std::string test_suite;
   std::string test_name;
   if (const auto* test_info = ::testing::UnitTest::GetInstance()->current_test_info(); test_info != nullptr) {
-    test_suite = test_info->test_suite_name();
-    test_name = test_info->name();
+    test_suite = StripDisabledGtestPrefix(test_info->test_suite_name());
+    test_name = StripDisabledGtestPrefix(test_info->name());
   }
 
   const int run_index = CaptureCollector::Instance().AllocateRunIndex(test_suite, test_name);
