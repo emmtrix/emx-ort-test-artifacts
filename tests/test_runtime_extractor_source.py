@@ -39,7 +39,7 @@ def test_runtime_capture_rewrites_negative_cases_to_separate_root() -> None:
     assert 'fs::path rewritten("onnxruntime-negative");' in source
 
 
-def test_runtime_extractor_cmake_reports_target_sizes_after_build() -> None:
+def test_cmake_enables_target_size_reporting() -> None:
     source = RUNTIME_EXTRACTOR_CMAKE.read_text(encoding="utf-8")
 
     assert "function(emx_enable_target_size_report target_name)" in source
@@ -53,7 +53,7 @@ def test_runtime_extractor_cmake_reports_target_sizes_after_build() -> None:
     assert 'emx_enable_target_size_reports_in_directory("${CMAKE_SOURCE_DIR}")' in source
 
 
-def test_runtime_extractor_target_size_script_reports_file_size() -> None:
+def test_report_script_validates_and_reports_size() -> None:
     source = TARGET_SIZE_REPORT_CMAKE.read_text(encoding="utf-8")
 
     assert 'message(FATAL_ERROR "target_name and target_file must be defined.")' in source
