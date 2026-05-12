@@ -430,6 +430,7 @@ def run_runtime_extractor(
         str(output_path),
         "--emx_artifact_root",
         str(artifacts_output),
+        "--gtest_also_run_disabled_tests",
     ]
 
     if gtest_filter:

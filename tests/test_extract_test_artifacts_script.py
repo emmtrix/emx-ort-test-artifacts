@@ -133,6 +133,34 @@ def test_helper_source_files_skips_webgpu_helpers(tmp_path: Path) -> None:
     assert helper_sources == [cpu_source.resolve()]
 
 
+def test_run_runtime_extractor_includes_disabled_gtest_cases(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """Run disabled ORT gtests so refreshed artifacts keep intentionally disabled cases."""
+    module = load_script_module()
+    captured: dict[str, object] = {}
+
+    def fake_run_logged_command(command, **kwargs):
+        captured["command"] = command
+        captured["kwargs"] = kwargs
+        return module.subprocess.CompletedProcess(command, 0, b"", b"")
+
+    monkeypatch.setattr(module, "run_logged_command", fake_run_logged_command)
+
+    module.run_runtime_extractor(
+        tmp_path / "extractor",
+        tmp_path / "runtime.json",
+        tmp_path / "artifacts",
+        tmp_path / "onnxruntime-org",
+        "MatMulBnb4.*",
+    )
+
+    command = captured["command"]
+    assert "--gtest_also_run_disabled_tests" in command
+    assert "--gtest_filter=MatMulBnb4.*" in command
+
+
 def test_optional_lld_linker_cmake_args_returns_lld_flags_when_available(monkeypatch) -> None:
     """Enable lld linker flags for non-Windows hosts when ld.lld is present."""
     module = load_script_module()
