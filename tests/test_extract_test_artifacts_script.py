@@ -99,6 +99,40 @@ def test_parse_version_tuple_reads_cmake_versions() -> None:
     assert module.parse_version_tuple("invalid") is None
 
 
+def test_helper_source_files_skips_webgpu_helpers(tmp_path: Path) -> None:
+    """Skip webgpu contrib helper sources that require unavailable webgpu headers in CI."""
+    module = load_script_module()
+    ort_repo_root = tmp_path / "onnxruntime-org"
+    ort_source_root = ort_repo_root / "onnxruntime"
+    source_file = ort_source_root / "test" / "contrib_ops" / "matmul_2bits_test.cc"
+    source_file.parent.mkdir(parents=True, exist_ok=True)
+    source_file.write_text(
+        '\n'.join(
+            [
+                '#include "contrib_ops/webgpu/quantization/matmul_nbits_common.h"',
+                '#include "contrib_ops/cpu/quantization/matmul_nbits_helper.h"',
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    webgpu_header = ort_source_root / "contrib_ops" / "webgpu" / "quantization" / "matmul_nbits_common.h"
+    webgpu_header.parent.mkdir(parents=True, exist_ok=True)
+    webgpu_header.write_text("// header\n", encoding="utf-8")
+    (webgpu_header.with_suffix(".cc")).write_text("// webgpu helper\n", encoding="utf-8")
+
+    cpu_header = ort_source_root / "contrib_ops" / "cpu" / "quantization" / "matmul_nbits_helper.h"
+    cpu_header.parent.mkdir(parents=True, exist_ok=True)
+    cpu_header.write_text("// header\n", encoding="utf-8")
+    cpu_source = cpu_header.with_suffix(".cc")
+    cpu_source.write_text("// cpu helper\n", encoding="utf-8")
+
+    helper_sources = module.helper_source_files(source_file, ort_repo_root)
+
+    assert helper_sources == [cpu_source.resolve()]
+
+
 def test_optional_lld_linker_cmake_args_returns_lld_flags_when_available(monkeypatch) -> None:
     """Enable lld linker flags for non-Windows hosts when ld.lld is present."""
     module = load_script_module()

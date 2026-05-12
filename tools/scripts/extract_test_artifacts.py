@@ -262,6 +262,9 @@ def helper_source_files(source_file: Path, ort_repo_root: Path) -> list[Path]:
         include_path = match.group(1)
         if not include_path.endswith(".h"):
             continue
+        normalized_include_path = include_path.replace("\\", "/")
+        if normalized_include_path.startswith("contrib_ops/webgpu/"):
+            continue
         candidate = ort_source_root / Path(include_path).with_suffix(".cc")
         if candidate.exists():
             helper_sources.append(candidate.resolve())
