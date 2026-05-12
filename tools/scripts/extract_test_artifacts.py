@@ -233,7 +233,7 @@ def configure_runtime_extractor(
     else:
         if shutil.which("ninja"):
             command.extend(["-G", "Ninja"])
-        command.append("-DCMAKE_BUILD_TYPE=RelWithDebInfo")
+        command.append("-DCMAKE_BUILD_TYPE=Release")
         command.extend(optional_lld_linker_cmake_args())
     run_logged_command(command, check=True)
 
