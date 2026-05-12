@@ -20,6 +20,10 @@ concurrency:
   group: refresh-artifact-dataset-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
+env:
+  LARGEST_DIRECTORIES_COUNT: 20
+  LARGEST_DIRECTORIES_MAX_DEPTH: 6
+
 jobs:
   refresh:
 #    runs-on: blacksmith-16vcpu-ubuntu-2204
@@ -131,3 +135,9 @@ jobs:
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-${{ github.run_id }}
+
+      - name: Report largest directories
+        if: always()
+        run: |
+          echo "Top ${LARGEST_DIRECTORIES_COUNT} largest directories under ${GITHUB_WORKSPACE}:"
+          du -x -h -d "${LARGEST_DIRECTORIES_MAX_DEPTH}" "${GITHUB_WORKSPACE}" 2>/dev/null | sort -hr | head -n "${LARGEST_DIRECTORIES_COUNT}" || true
