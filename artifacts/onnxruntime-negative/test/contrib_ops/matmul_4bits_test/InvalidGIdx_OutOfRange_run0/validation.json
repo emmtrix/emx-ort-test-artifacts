@@ -1,0 +1,19 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "group_index value",
+  "excluded_providers": [
+    "CUDA",
+    "CUDANHWC",
+    "DML",
+    "OpenVINO",
+    "WebGPU"
+  ],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

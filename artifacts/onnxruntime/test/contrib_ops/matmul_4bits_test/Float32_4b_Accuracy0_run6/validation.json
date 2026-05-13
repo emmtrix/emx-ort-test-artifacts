@@ -4,8 +4,8 @@
   "outputs": [
     {
       "name": "Y",
-      "relative_error": null,
-      "absolute_error": null,
+      "relative_error": 0.019999999552965164,
+      "absolute_error": 0.05000000074505806,
       "sort_output": false
     }
   ]
