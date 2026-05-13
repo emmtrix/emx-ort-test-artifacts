@@ -1,0 +1,15 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "Input 'cos_cache' dimension 1 should be same as head_size / 2 or rotary_embedding_dim / 2, got 8",
+  "included_providers": [
+    "CPU"
+  ],
+  "outputs": [
+    {
+      "name": "output",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}
