@@ -1,0 +1,15 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "Input tensor must have at least 3 dimensions",
+  "excluded_providers": [
+    "TensorRT"
+  ],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

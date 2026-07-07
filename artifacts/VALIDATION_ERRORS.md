@@ -7,17 +7,19 @@ Aggregates non-OK artifact validation outcomes.
 
 Expectation source: `tests/artifact_validation_expected.json`
 
-Validated cases: 4458 / 4458 OK, 0 non-OK.
+Validated cases: 4535 / 4542 OK, 7 non-OK.
 
 Ignored artifact generation cases: 5.
 
 | Error message | Count | Sources |
 | --- | --- | --- |
+| Values differ | 7 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test |
 
 ## Error frequency by source
 
 | Error message | Source | Count |
 | --- | --- | --- |
+| Values differ | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | 7 |
 
 ## Failing artifact cases
 
@@ -25,6 +27,13 @@ Lists every artifact case with a non-OK expected validation result.
 
 | Case | Source | Error |
 | --- | --- | --- |
+| artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/QuantizedKV_INT4_GQARatio4_Prompt_run0 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
+| artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/QuantizedKV_INT4_PerChannel_Prompt_run0 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
+| artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/QuantizedKV_INT4_PerTensor_Prompt_run0 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
+| artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/QuantizedKV_INT8_LargeHead_Prompt_run0 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
+| artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/QuantizedKV_INT8_MultiBatch_Prompt_run0 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
+| artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/QuantizedKV_INT8_PerChannel_Prompt_run0 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
+| artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/QuantizedKV_INT8_PerTensor_Prompt_run0 | artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test | test_data_set_0 output_0 (output): FAIL - values differ |
 
 ## Ignored Artifact Generation Cases
 

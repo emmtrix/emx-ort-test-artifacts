@@ -1,0 +1,12 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "Mask and input must have the same number of dimensions",
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

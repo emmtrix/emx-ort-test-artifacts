@@ -1,0 +1,15 @@
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "included_providers": [
+    "CPU"
+  ],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}
