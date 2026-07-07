@@ -1,0 +1,15 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "Only block sizes 16, 32, 64, 128, and 256 are supported",
+  "included_providers": [
+    "CPU"
+  ],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

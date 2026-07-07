@@ -1,0 +1,15 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "'weight_zero_point' must be a scalar or a 1D tensor of size 3 * hidden_size",
+  "included_providers": [
+    "CPU"
+  ],
+  "outputs": [
+    {
+      "name": "output",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

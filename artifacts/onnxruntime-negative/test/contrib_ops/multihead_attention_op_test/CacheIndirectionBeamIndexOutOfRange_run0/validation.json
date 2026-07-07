@@ -1,0 +1,33 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "cache_indirection beam index out of range",
+  "included_providers": [
+    "CPU"
+  ],
+  "outputs": [
+    {
+      "name": "output",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    },
+    {
+      "name": "present_key",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    },
+    {
+      "name": "present_value",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    },
+    {
+      "name": "",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}

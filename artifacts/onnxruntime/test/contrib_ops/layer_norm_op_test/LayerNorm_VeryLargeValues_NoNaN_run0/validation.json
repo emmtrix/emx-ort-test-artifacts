@@ -1,0 +1,21 @@
+{
+  "expects_failure": false,
+  "expected_failure_substring": "",
+  "excluded_providers": [
+    "CoreML",
+    "Dnnl",
+    "NNAPI",
+    "OpenVINO",
+    "QNN",
+    "TensorRT",
+    "WebGPU"
+  ],
+  "outputs": [
+    {
+      "name": "Y",
+      "relative_error": 9.9999997473787516e-05,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}
