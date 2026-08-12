@@ -2,6 +2,9 @@
 
 Refer to [AGENTS.md](../AGENTS.md) for project-specific guidance.
 
+For any task that supports, updates, or bumps the pinned ONNX Runtime version,
+follow [UPGRADE_ONNXRUNTIME.md](../UPGRADE_ONNXRUNTIME.md).
+
 ## Key Rules For This Repository
 
 - This repository is artifact-first. Prefer changes that improve the checked-in

@@ -11,6 +11,13 @@ The tracked files under `artifacts/` are the primary output and the main reason
 the repository exists. The code under `tools/` is maintainer-only
 infrastructure used to generate, refresh, validate, and document that dataset.
 
+## Task Playbooks
+
+- Supporting, updating, or bumping the pinned ONNX Runtime version (including
+  the resulting `ort-v<version>` tag and release): follow
+  [`UPGRADE_ONNXRUNTIME.md`](UPGRADE_ONNXRUNTIME.md). Do not improvise the
+  steps; that runbook is authoritative.
+
 ## Current State
 
 The repository already contains a checked-in artifact dataset plus maintenance

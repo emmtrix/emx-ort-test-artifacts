@@ -35,6 +35,12 @@ python tools/scripts/generate_artifact_validation_overview.py
 pytest -q
 ```
 
+## Supporting a New ONNX Runtime Version
+
+Moving the pinned ONNX Runtime version is its own workflow, driven by CI rather
+than by a local refresh. See
+[`UPGRADE_ONNXRUNTIME.md`](UPGRADE_ONNXRUNTIME.md).
+
 ## Notes
 
 - The ONNX Runtime checkout is prepared on demand under `build/`.

@@ -1,0 +1,67 @@
+name: Publish ORT Release
+
+# Publishes the `ort-v<version>` tag and the matching GitHub release for the
+# ONNX Runtime version currently pinned in requirements.txt.
+#
+# The workflow only listens on pushes to `main`, so nothing can be published
+# from a pull request branch: the tag appears exactly when the version bump has
+# been squash-merged, and points at that merge commit. The job is idempotent -
+# pushes that do not advance the pin find the release already present and exit
+# without doing anything.
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-ort-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Read pinned ONNX Runtime version
+        id: pin
+        run: |
+          version="$(PYTHONPATH=tools/python python -c '
+          from pathlib import Path
+
+          from emx_ort_test_materializer.onnxruntime_source import read_pinned_onnxruntime_version
+
+          print(read_pinned_onnxruntime_version(Path("requirements.txt")))
+          ')"
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+          echo "tag=ort-v${version}" >> "${GITHUB_OUTPUT}"
+          echo "Pinned ONNX Runtime version: ${version}"
+
+      - name: Publish tag and release for the pinned version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.pin.outputs.tag }}
+          ORT_VERSION: ${{ steps.pin.outputs.version }}
+        run: |
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists. Nothing to do."
+            exit 0
+          fi
+
+          gh release create "${TAG}" \
+            --target "${GITHUB_SHA}" \
+            --title "${TAG}" \
+            --notes "Support ONNX Runtime v${ORT_VERSION}"
+          echo "Published release ${TAG} at ${GITHUB_SHA}."
