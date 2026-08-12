@@ -17,6 +17,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,6 +43,8 @@ DEFAULT_MAX_PARALLEL_JOBS = 8
 MINIMUM_CMAKE_VERSION = (3, 28, 0)
 DEFAULT_IGNORED_CASES_PATH = REPO_ROOT / "artifact_generation_ignored_cases.json"
 DEFAULT_REQUIREMENTS_PATH = REPO_ROOT / "requirements.txt"
+CONFIGURE_ATTEMPTS = 3
+CONFIGURE_RETRY_DELAY_SECONDS = 15
 
 
 @dataclass(frozen=True)
@@ -207,6 +210,35 @@ def run_logged_command(command: list[str], **kwargs: object) -> subprocess.Compl
     return subprocess.run(command, **kwargs)
 
 
+def run_logged_command_with_retries(
+    command: list[str],
+    *,
+    attempts: int,
+    delay_seconds: float,
+) -> None:
+    """Run one external command and retry it a bounded number of times on failure.
+
+    CMake resolves the ONNX Runtime dependency archives over the network during
+    the configure step, so a single interrupted download fails the whole
+    extraction. The download stamps are only written on success, which makes a
+    repeated configure resume the missing downloads.
+    """
+    for attempt in range(1, attempts + 1):
+        completed = run_logged_command(command)
+        if completed.returncode == 0:
+            return
+
+        if attempt == attempts:
+            raise subprocess.CalledProcessError(completed.returncode, command)
+
+        print(
+            f"Command failed with exit code {completed.returncode}. "
+            f"Retrying in {delay_seconds:g}s (attempt {attempt + 1} of {attempts}).",
+            flush=True,
+        )
+        time.sleep(delay_seconds)
+
+
 def configure_runtime_extractor(
     cmake_binary: Path,
     build_dir: Path,
@@ -235,7 +267,11 @@ def configure_runtime_extractor(
             command.extend(["-G", "Ninja"])
         command.append("-DCMAKE_BUILD_TYPE=Release")
         command.extend(optional_lld_linker_cmake_args())
-    run_logged_command(command, check=True)
+    run_logged_command_with_retries(
+        command,
+        attempts=CONFIGURE_ATTEMPTS,
+        delay_seconds=CONFIGURE_RETRY_DELAY_SECONDS,
+    )
 
 
 def optional_lld_linker_cmake_args() -> list[str]:

@@ -120,6 +120,15 @@ Real examples from previous upgrades:
   language enabled, so
   `tools/cpp/runtime_extractor/CMakeLists.txt` became
   `project(emx_ort_runtime_extractor C CXX)`.
+- **Transient dependency downloads.** ORT resolves its dependency archives
+  (abseil, re2, googletest, ...) over the network during the CMake configure
+  step, so an interrupted or intercepted download fails the whole extraction
+  with a `FetchContent` error. This is infrastructure noise, not an upstream
+  change: `configure_runtime_extractor()` retries the configure step
+  (`CONFIGURE_ATTEMPTS`), and CMake resumes the missing downloads because the
+  download stamps are only written on success. If every attempt fails with the
+  same download error, the runner's network egress is the problem — never
+  work around it by disabling TLS verification.
 - **Newly failing validation cases.** Prefer fixing the pipeline. If a case
   cannot be replayed faithfully, record it in
   `artifact_generation_ignored_cases.json` with a concrete `reason`. Expected

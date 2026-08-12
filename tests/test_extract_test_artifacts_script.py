@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import importlib.util
+import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_PATH = REPO_ROOT / "tools" / "scripts" / "extract_test_artifacts.py"
@@ -240,3 +243,66 @@ def test_filter_ignored_runtime_artifact_cases_removes_records_and_directories(
     ]
     assert kept_dir.exists()
     assert not ignored_dir.exists()
+
+
+def test_run_logged_command_with_retries_returns_after_transient_failure(monkeypatch) -> None:
+    """Retry a failing command until one attempt succeeds."""
+    module = load_script_module()
+
+    return_codes = [1, 0]
+    observed_commands: list[list[str]] = []
+    sleeps: list[float] = []
+
+    def fake_run_logged_command(command: list[str], **_kwargs: object):
+        observed_commands.append(command)
+        return subprocess.CompletedProcess(command, return_codes.pop(0))
+
+    monkeypatch.setattr(module, "run_logged_command", fake_run_logged_command)
+    monkeypatch.setattr(module.time, "sleep", sleeps.append)
+
+    module.run_logged_command_with_retries(["cmake", "-S", "."], attempts=3, delay_seconds=15)
+
+    assert len(observed_commands) == 2
+    assert sleeps == [15]
+
+
+def test_run_logged_command_with_retries_raises_after_last_attempt(monkeypatch) -> None:
+    """Surface the original exit code once every attempt failed."""
+    module = load_script_module()
+
+    attempts_seen = 0
+
+    def fake_run_logged_command(command: list[str], **_kwargs: object):
+        nonlocal attempts_seen
+        attempts_seen += 1
+        return subprocess.CompletedProcess(command, 1)
+
+    monkeypatch.setattr(module, "run_logged_command", fake_run_logged_command)
+    monkeypatch.setattr(module.time, "sleep", lambda _seconds: None)
+
+    with pytest.raises(subprocess.CalledProcessError) as error:
+        module.run_logged_command_with_retries(["cmake", "-S", "."], attempts=3, delay_seconds=0)
+
+    assert attempts_seen == 3
+    assert error.value.returncode == 1
+
+
+def test_configure_runtime_extractor_retries_the_cmake_configure(monkeypatch, tmp_path: Path) -> None:
+    """Route the configure step through the bounded retry helper."""
+    module = load_script_module()
+
+    recorded: dict[str, object] = {}
+
+    def fake_retry(command: list[str], *, attempts: int, delay_seconds: float) -> None:
+        recorded["command"] = command
+        recorded["attempts"] = attempts
+        recorded["delay_seconds"] = delay_seconds
+
+    monkeypatch.setattr(module, "run_logged_command_with_retries", fake_retry)
+    monkeypatch.setattr(module.shutil, "which", lambda _name: None)
+
+    module.configure_runtime_extractor(Path("cmake"), tmp_path / "build", tmp_path / "onnxruntime-org")
+
+    assert recorded["attempts"] == module.CONFIGURE_ATTEMPTS
+    assert recorded["delay_seconds"] == module.CONFIGURE_RETRY_DELAY_SECONDS
+    assert "-B" in recorded["command"]
