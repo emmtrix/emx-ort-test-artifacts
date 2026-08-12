@@ -41,6 +41,14 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/crop_and_resize_op_test/CropAndResizeRejectsMalformedCropSize_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/crop_and_resize_op_test/CropAndResizeRejectsMalformedCropSize_run1",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/crop_op_test/Crop_Invalid_Scale_Size_run0",
       "expected_result": "OK"
     },
@@ -54,6 +62,10 @@
     },
     {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/embed_layer_norm_op_test/EmbedLayerNormNegativePositionIds_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/expand_dims_test/MalformedConstInitializerAxisFailsShapeInference_run0",
       "expected_result": "OK"
     },
     {
@@ -369,6 +381,10 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/group_query_attention_op_test/CpuRejectsQKNormWeightInputs_run0",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/group_query_attention_op_test/Int32MaxSeqlensK_OOB_run0",
       "expected_result": "OK"
     },
@@ -410,6 +426,14 @@
     },
     {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/group_query_attention_op_test/SeqlensKExceedsCosCache_OOB_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/group_query_attention_op_test/SeqlensKExceedsEmptyPastBuffer_OOBRead_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/group_query_attention_op_test/SeqlensKExceedsPastBuffer_OOBRead_run0",
       "expected_result": "OK"
     },
     {
@@ -457,6 +481,22 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/matmul_4bits_test/PrePack_InvalidBRank_RejectsAtSessionInit_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/matmul_4bits_test/PrePack_InvalidBShape_RejectsAtSessionInit_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/matmul_4bits_test/PrePack_InvalidScalesShape_RejectsAtSessionInit_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/matmul_4bits_test/PrePack_InvalidUInt8ZeroPointsShape_RejectsAtSessionInit_run0",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/matmul_4bits_test/UnsupportedBlockSize_512_run0",
       "expected_result": "OK"
     },
@@ -478,6 +518,14 @@
     },
     {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/maxpool_mask_test/MaxPoolWithMask_DimCountMismatch_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/maxpool_mask_test/MaxPoolWithMask_KernelRankMismatch_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/maxpool_mask_test/MaxPoolWithMask_KernelRankTooLarge_run0",
       "expected_result": "OK"
     },
     {
@@ -605,6 +653,10 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/rotary_embedding_op_test/ContribRotaryEmbedding_RejectsCosCacheExceedsHiddenSize_NoNumHeads_run0",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/rotary_embedding_op_test/ContribRotaryEmbedding_RejectsHiddenSizeOverflow_run0",
       "expected_result": "OK"
     },
@@ -621,6 +673,46 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockColIndicesInvalidInSecondLayout_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockColIndicesInvalidWithinNNZ_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockColIndicesLargeValue_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockColIndicesNegative_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockColIndicesOutOfRange_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockRowIndicesExceedsColCount_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockRowIndicesFirstElementNonZero_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockRowIndicesInvalidInSecondLayout_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockRowIndicesNegative_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsBlockRowIndicesNonMonotonic_run0",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsKeyTotalSequenceLengthsShapeMismatch_run0",
       "expected_result": "OK"
     },
@@ -630,6 +722,10 @@
     },
     {
       "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsPromptKeyTotalSequenceLengthsShorterThanSequenceLength_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime-negative/test/contrib_ops/sparse_attention_op_test/RejectsZeroDimBlockRowIndices_run0",
       "expected_result": "OK"
     },
     {
@@ -842,6 +938,22 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/attention_op_test/AttentionMaskExceedSequence_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/attention_op_test/AttentionMaskIndex1DClampOOB_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/attention_op_test/AttentionMaskIndex1DClampOOB_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/attention_op_test/AttentionMaskIndex1DClampOOB_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/attention_op_test/AttentionMaskIndex1DClampOOB_run3",
       "expected_result": "OK"
     },
     {
@@ -1518,6 +1630,22 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/expand_dims_test/MinAxis_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/expand_dims_test/NegativeAxisConstInitializerShapeInference_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/expand_dims_test/NegativeAxisConstInitializerShapeInference_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/expand_dims_test/NegativeAxisConstInitializerShapeInference_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/expand_dims_test/NegativeAxisConstInitializerShapeInference_run3",
       "expected_result": "OK"
     },
     {
@@ -3517,6 +3645,22 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/BatchedRightPaddedRotaryPrefill_CPU_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/BatchedRightPaddedRotaryPrefill_CPU_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/BatchedRightPaddedRotaryPrefill_CPU_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/BatchedRightPaddedRotaryPrefill_CPU_run3",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime/test/contrib_ops/group_query_attention_op_test/BoundaryValidSeqlensKWithLargerPast_run0",
       "expected_result": "OK"
     },
@@ -4617,6 +4761,1254 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run10",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run11",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run12",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run13",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run14",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run15",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run16",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run17",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run18",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run19",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run20",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run21",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run22",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run23",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run24",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run25",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run26",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run27",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run28",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run29",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run30",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run31",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run32",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run33",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run34",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run35",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run36",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run37",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run38",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run39",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run40",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run41",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run42",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run43",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run44",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run45",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run46",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run47",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run48",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run49",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run50",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run51",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run8",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy0_run9",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run10",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run11",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run12",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run13",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run14",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run15",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run16",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run17",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run18",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run19",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run20",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run21",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run22",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run23",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run24",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run25",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run26",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run27",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run28",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run29",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run30",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run31",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run32",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run33",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run34",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run35",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run36",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run37",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run38",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run39",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run40",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run41",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run42",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run43",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run44",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run45",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run46",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run47",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run48",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run49",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run50",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run51",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run8",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen128_Accuracy4_run9",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run10",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run11",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run12",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run13",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run14",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run15",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run16",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run17",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run18",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run19",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run20",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run21",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run22",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run23",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run24",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run25",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run26",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run27",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run28",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run29",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run30",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run31",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run32",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run33",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run34",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run35",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run36",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run37",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run38",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run39",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run40",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run41",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run42",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run43",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run44",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run45",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run46",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run47",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run48",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run49",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run50",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run51",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run8",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy0_run9",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run10",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run11",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run12",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run13",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run14",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run15",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run16",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run17",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run18",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run19",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run20",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run21",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run22",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run23",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run24",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run25",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run26",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run27",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run28",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run29",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run30",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run31",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run32",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run33",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run34",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run35",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run36",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run37",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run38",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run39",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run40",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run41",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run42",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run43",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run44",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run45",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run46",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run47",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run48",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run49",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run50",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run51",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run8",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen32_Accuracy4_run9",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run10",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run11",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run12",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run13",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run14",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run15",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run16",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run17",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run18",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run19",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run20",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run21",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run22",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run23",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run24",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run25",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run26",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run27",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run28",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run29",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run30",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run31",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run32",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run33",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run34",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run35",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run36",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run37",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run38",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run39",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run40",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run41",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run42",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run43",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run44",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run45",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run46",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run47",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run48",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run49",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run50",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run51",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run8",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy0_run9",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run10",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run11",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run12",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run13",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run14",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run15",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run16",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run17",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run18",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run19",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run20",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run21",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run22",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run23",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run24",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run25",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run26",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run27",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run28",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run29",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run30",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run31",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run32",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run33",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run34",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run35",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run36",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run37",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run38",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run39",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run40",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run41",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run42",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run43",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run44",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run45",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run46",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run47",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run48",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run49",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run50",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run51",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run8",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_BlkLen64_Accuracy4_run9",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/Float32_2b_FloatZP_DynamicZP_run0",
       "expected_result": "OK"
     },
@@ -4654,6 +6046,14 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/MLFloat16_2b_MLFloat16ZP_Fallback_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/MLFloat16_2b_Uint8ZP_Accuracy4_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_2bits_test/MLFloat16_2b_Uint8ZP_Fallback_run0",
       "expected_result": "OK"
     },
     {
@@ -7153,6 +8553,50 @@
       "expected_result": "OK"
     },
     {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/PrePack_LegacyFlattenedShapes_Accepted_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_AddInitializer_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_NotSharedWithoutOptIn_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_4bits_test/SharedPrepackedWeights_NotSharedWithoutOptIn_run1",
+      "expected_result": "OK"
+    },
+    {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/Float32_8b_AccuracyLevel1_run0",
       "expected_result": "OK"
     },
@@ -8222,6 +9666,46 @@
     },
     {
       "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/Float32_8b_AccuracyLevel4_run99",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run1",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run2",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run3",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run4",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run5",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run6",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_AddInitializer_run7",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_NotSharedWithoutOptIn_run0",
+      "expected_result": "OK"
+    },
+    {
+      "path": "artifacts/onnxruntime/test/contrib_ops/matmul_8bits_test/SharedPrepackedWeights_8b_NotSharedWithoutOptIn_run1",
       "expected_result": "OK"
     },
     {
@@ -17841,15 +19325,7 @@
       "expected_result": "OK"
     },
     {
-      "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch1_NoBeta_run1",
-      "expected_result": "OK"
-    },
-    {
       "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch1_run0",
-      "expected_result": "OK"
-    },
-    {
-      "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch1_run1",
       "expected_result": "OK"
     },
     {
@@ -17857,15 +19333,7 @@
       "expected_result": "OK"
     },
     {
-      "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch2_Bias_ProducingOptionalOutput_run1",
-      "expected_result": "OK"
-    },
-    {
       "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch2_Bias_run0",
-      "expected_result": "OK"
-    },
-    {
-      "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch2_Bias_run1",
       "expected_result": "OK"
     },
     {
@@ -17881,23 +19349,11 @@
       "expected_result": "OK"
     },
     {
-      "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch2_TokenCount_run1",
-      "expected_result": "OK"
-    },
-    {
       "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch2_run0",
       "expected_result": "OK"
     },
     {
-      "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormBatch2_run1",
-      "expected_result": "OK"
-    },
-    {
       "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormNullInput_run0",
-      "expected_result": "OK"
-    },
-    {
-      "path": "artifacts/onnxruntime/test/contrib_ops/skiplayernorm_op_test/SkipLayerNormNullInput_run1",
       "expected_result": "OK"
     },
     {
