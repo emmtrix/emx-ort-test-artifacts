@@ -1,0 +1,15 @@
+{
+  "expects_failure": true,
+  "expected_failure_substring": "[ShapeInferenceError] crop_size input tensor must have exactly 2 elements; got 1",
+  "excluded_providers": [
+    "TensorRT"
+  ],
+  "outputs": [
+    {
+      "name": "output",
+      "relative_error": null,
+      "absolute_error": null,
+      "sort_output": false
+    }
+  ]
+}
