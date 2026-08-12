@@ -94,6 +94,7 @@ for that case.
 │   ├── python/             # shared Python helpers for maintainer tooling
 │   └── cpp/                # runtime C++ extractor sources
 ├── DEVELOPMENT.md          # maintainer workflow
+├── UPGRADE_ONNXRUNTIME.md  # runbook for pinning a new ONNX Runtime version
 ├── AGENTS.md               # repository-specific coding guidance
 └── requirements.txt        # maintainer environment dependencies
 ```
@@ -101,7 +102,9 @@ for that case.
 ## Maintainer Note
 
 Maintainers who need to regenerate or validate the dataset should use the
-commands documented in [`DEVELOPMENT.md`](DEVELOPMENT.md). The maintenance
+commands documented in [`DEVELOPMENT.md`](DEVELOPMENT.md). Advancing the
+dataset to a new ONNX Runtime release is described in
+[`UPGRADE_ONNXRUNTIME.md`](UPGRADE_ONNXRUNTIME.md). The maintenance
 tooling is intentionally kept out of the main repository narrative so the
 purpose of the repository stays clear: checked-in ORT artifacts are the goal,
 and the tooling is only a means to refresh them.
