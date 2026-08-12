@@ -1,6 +1,6 @@
 ---
 name: support-new-onnxruntime
-description: Advance this repository to a new pinned ONNX Runtime (ORT) release - move the pin, let CI re-extract the artifact dataset, and repair extractor breakage until the pull request is green. Use whenever the user asks to support, update, bump, or upgrade an ONNX Runtime version, in English or German (for example "support new ORT", "neue ORT unterstützen", "ORT 1.28 unterstützen", "bump onnxruntime pin", "update ONNX Runtime to <version>").
+description: Advance this repository to a new pinned ONNX Runtime (ORT) release - move the pin, let CI re-extract the artifact dataset, repair extractor breakage, and land the ort-v<version> tag and release. Use whenever the user asks to support, update, bump, or upgrade an ONNX Runtime version, in English or German (for example "support new ORT", "neue ORT unterstützen", "ORT 1.28 unterstützen", "bump onnxruntime pin", "update ONNX Runtime to <version>").
 ---
 
 # Supporting a New ONNX Runtime Version
@@ -26,8 +26,9 @@ Dataset` workflow regenerate the dataset and push it back onto the branch.
 Fix whatever the new upstream release broke in the extractor
 (`tools/scripts/extract_test_artifacts.py`,
 `tools/cpp/runtime_extractor/`), with regression tests. The `ort-v<version>`
-tag is created automatically once the pull request is squash-merged into
-`main`; never create it by hand on a pull request branch.
+tag and its GitHub release are published automatically once the pull request
+is squash-merged into `main`; never create them by hand on a pull request
+branch.
 
 ## Before Starting
 

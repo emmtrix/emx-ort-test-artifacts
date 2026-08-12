@@ -18,7 +18,8 @@ release broke in the extractor, and tag the result.
    `chore: refresh ORT artifact dataset` commit onto the pull request branch.
 4. Fix any extractor breakage the new ORT release introduced; repeat until CI
    is green.
-5. Squash-merge. CI then creates the `ort-v<version>` tag automatically.
+5. Squash-merge. CI then publishes the `ort-v<version>` tag and release
+   automatically.
 
 ## Background: What Drives the Version
 
@@ -143,33 +144,34 @@ green checkmark:
 - The non-OK case count in `artifacts/VALIDATION_ERRORS.md` did not grow
   without an explanation.
 
-## Step 6: Merge — the Tag Is Automated
+## Step 6: Merge — Tag and Release Are Automated
 
 Squash-merge the pull request into `main`. That is the last manual step.
 
-`.github/workflows/publish-ort-tag.yml` runs on every push to `main`, reads
-the pinned version from `requirements.txt`, and creates the tag
-`ort-v<version>` if it does not exist yet. The `ort-` prefix names the
-supported ORT version, not a version of this repository. Existing examples:
-`ort-v1.26.0`, `ort-v1.27.0`.
+`.github/workflows/publish-ort-release.yml` runs on every push to `main`,
+reads the pinned version from `requirements.txt`, and — if nothing has been
+published for it yet — creates the tag `ort-v<version>` together with a GitHub
+release named `ort-v<version>` and the body `Support ONNX Runtime v<version>`.
+The `ort-` prefix names the supported ORT version, not a version of this
+repository. Existing examples: `ort-v1.26.0`, `ort-v1.27.0`.
 
 Two properties of the workflow matter:
 
-- It listens only on pushes to `main`, so a tag can never be created from a
-  pull request branch. It appears exactly when the bump is squash-merged, and
+- It listens only on pushes to `main`, so nothing can be published from a pull
+  request branch. The tag appears exactly when the bump is squash-merged, and
   points at that merge commit.
-- It is idempotent. Pushes that do not advance the pin find the tag already
-  present and exit. A tag is therefore created exactly once per ORT version
-  and is never moved.
+- It is idempotent. Pushes that do not advance the pin find the release
+  already present and exit. Tag and release are therefore created exactly once
+  per ORT version, and an existing tag is never moved.
 
-No GitHub release is created. Consequence of the never-moved tag: later
-dataset refreshes for the same ORT version land on `main` after the tag and
-are not contained in it. If such a refresh has to be marked, add a separate
-tag by hand.
+Consequence of the never-moved tag: later dataset refreshes for the same ORT
+version land on `main` after the tag and are not contained in it. If such a
+refresh has to be marked, publish it by hand.
 
 Manual fallback, should the workflow fail or need re-running: trigger
-`Publish ORT Tag` via `workflow_dispatch`, or tag by hand on `main` with
-`git tag ort-v<version> && git push origin ort-v<version>`.
+`Publish ORT Release` via `workflow_dispatch`, or publish by hand on `main`
+with
+`gh release create ort-v<version> --title ort-v<version> --notes "Support ONNX Runtime v<version>"`.
 
 ## Never Hand-Edit
 
@@ -192,4 +194,5 @@ These are produced by the pipeline and committed by CI:
       expectations
 - [ ] Dataset delta reviewed (operator and validation reports)
 - [ ] Squash-merged into `main`
-- [ ] `Publish ORT Tag` created the `ort-v<version>` tag on the merge commit
+- [ ] `Publish ORT Release` published the `ort-v<version>` tag and release on
+      the merge commit
