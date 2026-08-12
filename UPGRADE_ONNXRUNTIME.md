@@ -18,7 +18,7 @@ release broke in the extractor, and tag the result.
    `chore: refresh ORT artifact dataset` commit onto the pull request branch.
 4. Fix any extractor breakage the new ORT release introduced; repeat until CI
    is green.
-5. Squash-merge, then create tag `ort-v<version>` and a GitHub release.
+5. Squash-merge. CI then creates the `ort-v<version>` tag automatically.
 
 ## Background: What Drives the Version
 
@@ -143,25 +143,33 @@ green checkmark:
 - The non-OK case count in `artifacts/VALIDATION_ERRORS.md` did not grow
   without an explanation.
 
-## Step 6: Merge, Tag, and Release
+## Step 6: Merge — the Tag Is Automated
 
-Squash-merge the pull request into `main`. Then, on the resulting merge
-commit:
+Squash-merge the pull request into `main`. That is the last manual step.
 
-1. Create the tag `ort-v<version>` (note the `ort-` prefix — it names the
-   supported ORT version, not a version of this repository):
+`.github/workflows/publish-ort-tag.yml` runs on every push to `main`, reads
+the pinned version from `requirements.txt`, and creates the tag
+`ort-v<version>` if it does not exist yet. The `ort-` prefix names the
+supported ORT version, not a version of this repository. Existing examples:
+`ort-v1.26.0`, `ort-v1.27.0`.
 
-   ```bash
-   git checkout main
-   git pull origin main
-   git tag ort-v<version>
-   git push origin ort-v<version>
-   ```
+Two properties of the workflow matter:
 
-2. Publish a GitHub release for that tag, named `ort-v<version>`, with a body
-   such as `Support ONNX Runtime v<version>`.
+- It listens only on pushes to `main`, so a tag can never be created from a
+  pull request branch. It appears exactly when the bump is squash-merged, and
+  points at that merge commit.
+- It is idempotent. Pushes that do not advance the pin find the tag already
+  present and exit. A tag is therefore created exactly once per ORT version
+  and is never moved.
 
-Existing examples: `ort-v1.26.0`, `ort-v1.27.0`.
+No GitHub release is created. Consequence of the never-moved tag: later
+dataset refreshes for the same ORT version land on `main` after the tag and
+are not contained in it. If such a refresh has to be marked, add a separate
+tag by hand.
+
+Manual fallback, should the workflow fail or need re-running: trigger
+`Publish ORT Tag` via `workflow_dispatch`, or tag by hand on `main` with
+`git tag ort-v<version> && git push origin ort-v<version>`.
 
 ## Never Hand-Edit
 
@@ -184,5 +192,4 @@ These are produced by the pipeline and committed by CI:
       expectations
 - [ ] Dataset delta reviewed (operator and validation reports)
 - [ ] Squash-merged into `main`
-- [ ] Tag `ort-v<version>` pushed
-- [ ] GitHub release `ort-v<version>` published
+- [ ] `Publish ORT Tag` created the `ort-v<version>` tag on the merge commit
